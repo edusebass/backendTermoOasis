@@ -97,7 +97,7 @@ Este endpoint cambia la contraseña hay que poner el token que nos da el endpoin
 POST
 http://localhost:3000/api/nueva-password/:tokenContraseña
 
-````
+```
 BODY
 
     {
@@ -105,7 +105,6 @@ BODY
     "confirmContraseña": "Eduardo123."
     }
 ```
-
 
 ## Configuración
 
@@ -118,4 +117,7 @@ npm run dev
 Asegúrate de configurar las siguientes variables de entorno antes de ejecutar la aplicación:
 
 - `MONGODB_URI`: La URL de conexión a la base de datos MongoDB.
-````
+
+```
+
+```
