@@ -48,6 +48,8 @@ POST
 http://localhost:3000/api/login
 
 ```
+BODY
+para loguearse
     {
         "email": "edu03@sebas.com",
         "contraseña": "123Edu."
