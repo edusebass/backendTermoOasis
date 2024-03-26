@@ -7,7 +7,7 @@ const login = async(req,res)=>{
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
     const usuarioBDD = await Usuario.findOne({email}).select("-__v -token -updatedAt -createdAt")
     if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
-    const verificarcontraseña = await usuarioBDD.matchcontraseña(contraseña)
+    const verificarcontraseña = await usuarioBDD.matchContraseña(contraseña)
     if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, el contraseña no es el correcto"})
     const token = generarJWT(usuarioBDD._id,"usuario")
     const {nombre,apellido,_id} = usuarioBDD
