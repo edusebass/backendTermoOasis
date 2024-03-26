@@ -4,10 +4,14 @@ Esta API está diseñada para gestionar datos relacionados con un programa veter
 
 # Endpoints
 
+# USUARIOS
+
+## Registro
+
 POST
 http://localhost:3000/api/registro
 
-````
+```
 BODY
 para crear un doctor
     {
@@ -38,9 +42,17 @@ para crear un paciente
 
 ```
 
+## LOGIN
 
+POST
+http://localhost:3000/api/login
 
-
+```
+    {
+        "email": "edu03@sebas.com",
+        "contraseña": "123Edu."
+    }
+```
 
 ## Configuración
 
@@ -52,9 +64,3 @@ npm run dev
 Asegúrate de configurar las siguientes variables de entorno antes de ejecutar la aplicación:
 
 - `MONGODB_URI`: La URL de conexión a la base de datos MongoDB.
-
-
-
-
-
-````
