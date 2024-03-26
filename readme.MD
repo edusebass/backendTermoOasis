@@ -1,6 +1,4 @@
-# API para Control de Programa Veterinario
-
-Esta API está diseñada para gestionar datos relacionados con un programa veterinario. Proporciona funcionalidades clave para la administración de información sobre pacientes, citas, historias clínicas y más.
+# API TERMO OASIS
 
 # Endpoints
 
