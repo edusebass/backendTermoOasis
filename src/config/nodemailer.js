@@ -38,11 +38,14 @@ const emailMailRecuperarContraseña = async (userMail, token) =>{
     html: `
     <h1>TERMO OASIS</h1>
     <hr>
-    // <a href=${process.env.URL_FRONTEND}recuperar-password/${token}>Clic para reestablecer tu contraseña</a>
+    
+    http://localhost:3000/nueva-password/${token}
     <hr>
+    Ese seria el endpoint que devolveria al correo y que se deberia utilizar 
     <footer>Manos que curan con amor</footer>
     `
     });
+    // url_frontend/api/nueva-password   esto para cuando este el frontend
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
 }
 

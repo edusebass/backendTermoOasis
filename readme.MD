@@ -117,6 +117,10 @@ npm run dev
 Asegúrate de configurar las siguientes variables de entorno antes de ejecutar la aplicación:
 
 - `MONGODB_URI`: La URL de conexión a la base de datos MongoDB.
+- `HOST_MAILTRAP`=
+- `PORT_MAILTRAP`=
+- `USER_MAILTRAP`=
+- `PASS_MAILTRAP`=
 
 ```
 
