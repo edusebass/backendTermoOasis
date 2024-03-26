@@ -67,6 +67,7 @@ para loguearse
 ## Configuración
 
 npm i
+
 npm run dev
 
 ### Variables de Entorno
