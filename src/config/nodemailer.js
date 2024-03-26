@@ -30,17 +30,17 @@ const sendMailToUser = async(userMail,token)=>{
 }
 
 // send mail with defined transport object
-const sendMailToRecoveryPassword = async(userMail,token)=>{
+const emailMailRecuperarContraseña = async (userMail, token) =>{
     let info = await transporter.sendMail({
-    from: 'admin@vet.com',
+    from: process.env.USER_MAILTRAP,
     to: userMail,
     subject: "Correo para reestablecer tu contraseña",
     html: `
-    <h1>Sistema de gestión (VET-ESFOT 🐶 😺)</h1>
+    <h1>TERMO OASIS</h1>
     <hr>
-    <a href=${process.env.URL_FRONTEND}recuperar-password/${token}>Clic para reestablecer tu contraseña</a>
+    // <a href=${process.env.URL_FRONTEND}recuperar-password/${token}>Clic para reestablecer tu contraseña</a>
     <hr>
-    <footer>Grandote te da la Bienvenida!</footer>
+    <footer>Manos que curan con amor</footer>
     `
     });
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
@@ -69,6 +69,6 @@ const sendMailToPaciente = async(userMail, password)=>{
 
 export {
     sendMailToUser,
-    sendMailToRecoveryPassword,
+    emailMailRecuperarContraseña,
     sendMailToPaciente
 }

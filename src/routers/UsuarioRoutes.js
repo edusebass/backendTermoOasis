@@ -1,20 +1,23 @@
-import {Router} from 'express'
+import { Router } from 'express'
 // import verificarAutenticacion from '../middlewares/autenticacion.js'
-
-const router = Router()
 import{
     login,
-    registro
+    registro,
+    recuperarContraseña,
+    nuevaContraseña,
     // detalleUsuario,
     // perfil,
 } from "../controllers/UsuarioController.js";
+const usuarioRouter = Router()
 
-router.post("/login", login)
+usuarioRouter.post("/login", login) //endpoint para el login
+usuarioRouter.post("/registro", registro) //enpoint para el registro
+usuarioRouter.post("/recuperar-password", recuperarContraseña) //endpoint para enviar el email y que te llegue el correo para recuperar contraseña
+usuarioRouter.post("/nueva-password/:token", nuevaContraseña)
 
-router.post("/registro", registro)
 
-// router.get("/perfil", verificarAutenticacion, perfil)
+// usuarioRouter.get("/perfil", verificarAutenticacion, perfil)
 
-// router.get('/usuario/:id',verificarAutenticacion, detalleUsuario)
+// usuarioRouter.get('/usuario/:id',verificarAutenticacion, detalleUsuario)
 
-export default router
+export default usuarioRouter

@@ -72,4 +72,9 @@ UsuarioSchema.methods.matchContraseña = async function(contraseña){
     return response
 }
 
+UsuarioSchema.methods.crearToken = function(){
+  const tokenGenerado = this.token = Math.random().toString(36).slice(2)
+  return tokenGenerado
+}
+
 export default model('Usuario', UsuarioSchema)

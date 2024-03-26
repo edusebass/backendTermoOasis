@@ -55,6 +55,8 @@ para loguearse
 
 
     te devuelve esto
+    nota: este token sirve los endpoint que utilizan CRUD no para el cambio de contraseña el otro es diferente y se especifica abajo
+
     {
         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDIwZWQzNDc1M2JiZDdhNzZhOGQ3ZiIsInJvbCI6InVzdWFyaW8iLCJpYXQiOjE3MTE0MjQ1MzgsImV4cCI6MTcxMTUxMDkzOH0.r1fEotj0Qr23Txlg0wnFSvnVSZJMl4LBbBxTHZ5aPqU",
         "nombre": "Eduardo",
@@ -63,6 +65,47 @@ para loguearse
         "email": "edu03@sebas.com"
     }
 ```
+
+## RECUPERAR CONTRASEÑA
+
+Este endpoint envia el correo con el link del frontend para que ponga su nueva contraseña
+POST
+http://localhost:3000/api/recuperar-password
+
+```
+BODY
+    {
+        "email":"edu03sebas@gmail.com"
+    }
+```
+
+La respuesta que da es esto
+
+```
+    {
+        "msg": "Revisa tu correo electrónico para restablecer tu contraseña",
+        "tokenContraseña": "6qm0tygrnm8"
+    }
+```
+
+POST
+
+## CREAR NUEVA PASSWORD
+
+Este endpoint cambia la contraseña hay que poner el token que nos da el endpoint de recuperar contraseña - NO EL DE INICIO DE SESION -
+
+POST
+http://localhost:3000/api/nueva-password/:tokenContraseña
+
+````
+BODY
+
+    {
+    "contraseña": "Eduardo123.",
+    "confirmContraseña": "Eduardo123."
+    }
+```
+
 
 ## Configuración
 
@@ -75,3 +118,4 @@ npm run dev
 Asegúrate de configurar las siguientes variables de entorno antes de ejecutar la aplicación:
 
 - `MONGODB_URI`: La URL de conexión a la base de datos MongoDB.
+````
