@@ -52,6 +52,16 @@ http://localhost:3000/api/login
         "email": "edu03@sebas.com",
         "contraseña": "123Edu."
     }
+
+
+    te devuelve esto
+    {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDIwZWQzNDc1M2JiZDdhNzZhOGQ3ZiIsInJvbCI6InVzdWFyaW8iLCJpYXQiOjE3MTE0MjQ1MzgsImV4cCI6MTcxMTUxMDkzOH0.r1fEotj0Qr23Txlg0wnFSvnVSZJMl4LBbBxTHZ5aPqU",
+        "nombre": "Eduardo",
+        "apellido": "Almachi",
+        "_id": "66020ed34753bbd7a76a8d7f",
+        "email": "edu03@sebas.com"
+    }
 ```
 
 ## Configuración
