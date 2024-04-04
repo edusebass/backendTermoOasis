@@ -1,6 +1,6 @@
 # API TERMO OASIS
 
-# Endpoints
+### Endpoints
 
 # USUARIOS
 
@@ -106,6 +106,38 @@ BODY
     }
 ```
 
+#
+
+#
+
+# CITAS
+
+## Registrar una nueva cita
+
+Este endpoint registra una cita
+
+POST
+
+http://localhost:3000/api/citas/registrar
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+```
+BODY
+{
+  "dia": "2024-06-05T00:00:00",
+  "inicio": "2024-06-05T07:00:00",
+  "fin": "2024-06-05T13:00:00",
+  "comentarios": "Revisión de rutina",
+  "receta": "Paracetamol",
+  "idPaciente": "660f0a7a1e74f02e637b968c",
+  "idDoctor": "66020ed34753bbd7a76a8d7f"
+}
+
+```
+
+Consideraciones: La fecha tanto para el dia inicio y fin debe ser la misma ademas de proporcionar el token
+
 ## Configuración
 
 npm i
@@ -121,9 +153,5 @@ Asegúrate de configurar las siguientes variables de entorno antes de ejecutar l
 - `PORT_MAILTRAP`=
 - `USER_MAILTRAP`=
 - `PASS_MAILTRAP`=
-
-```
-
-```
 
 AÑADO ALGO
