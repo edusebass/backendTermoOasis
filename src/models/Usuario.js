@@ -1,8 +1,7 @@
-import {Schema, model } from 'mongoose'
 import mongoose from 'mongoose'
 import bcrypt from "bcryptjs";
 
-const UsuarioSchema = new Schema(
+const UsuarioSchema = mongoose.Schema(
   {
     nombre: {
       type: String,
@@ -42,7 +41,7 @@ const UsuarioSchema = new Schema(
     citas: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Dates",
+        ref: "Citas",
       },
     ],
     pacientes: [
@@ -76,5 +75,5 @@ UsuarioSchema.methods.crearToken = function(){
   const tokenGenerado = this.token = Math.random().toString(36).slice(2)
   return tokenGenerado
 }
-
-export default model('Usuario', UsuarioSchema)
+const UsuarioModelo = mongoose.model("Usuarios", UsuarioSchema)
+export default UsuarioModelo
