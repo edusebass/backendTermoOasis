@@ -3,6 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors';
 import usuarioRouter from './routers/UsuarioRoutes.js';
+import citasRouter from './routers/CitasRoutes.js';
 
 
 // Inicializaciones
@@ -25,7 +26,9 @@ app.get('/',(req,res)=>{
     res.send("Server on")
 })
 
-app.use('/api', usuarioRouter)
+app.use('/api', usuarioRouter) //endpoints para usuarios
+app.use('/api/citas', citasRouter) //endpoints para citas
+
 
 
 // Manejo de una ruta que no sea encontrada
