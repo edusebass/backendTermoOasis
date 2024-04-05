@@ -6,7 +6,7 @@
 // import { supaNotif } from "../index.js";
 import CitaModelo from "../models/Citas.js";
 import UsuarioModelo from "../models/Usuario.js";
-import { enviarEmailCita} from "../config/nodemailer.js";
+import { emailCancelarCita, enviarEmailCita} from "../config/nodemailer.js";
 import mongoose from "mongoose";
 
 const crearCita = async (req, res) => {
@@ -37,12 +37,20 @@ const crearCita = async (req, res) => {
         return res.status(400).json({ msg: error.message, status: false });
       }
       // //
-
+      // Verificar si las fechas están en el pasado
+      
+      
+      
+      
       // Convertir las fechas de inicio y fin a objetos Date
+      const ahora = new Date();
       const diaCita = new Date(dia)
       const inicioCita = new Date(inicio)
       const finCita = new Date(fin)
 
+      if (inicioCita < ahora) {
+        return res.status(400).json({ msg: "No puedes agendar una cita en el pasado" });
+    }
       // Verificar si el inicio y el fin están en el mismo día que el especificado en "day"
       if (
           diaCita.getDate() !== inicioCita.getDate() ||
@@ -105,8 +113,53 @@ const crearCita = async (req, res) => {
       console.log(error.message);
       res.status(400).json({ msg: error.message, status: false });
     }
-  };
+};
+
+const cancelarCita = async (req, res) => {
+  const { id } = req.params;
+
+  // verifica si estan llenos todos los campos
+  if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+
+
+  try {
+    const cita = await CitaModelo.findById(id)
+      .populate("idDoctor")
+      .populate("idPaciente");
+
+    if (!cita) {
+      const error = new Error("Cita no encontrada");
+      return res.status(401).json({ msg: error.message });
+    }
+
+    // Obtenemos la fecha y hora actual y la fecha de inicio de la cita
+    const ahora = new Date();
+    const inicioCita = new Date(cita.inicio);
+
+    // Calculamos la diferencia en milisegundos entre la fecha y hora actual y el inicio de la cita
+    const diferenciaTiempo = inicioCita.getTime() - ahora.getTime();
+
+    // Verificamos si la diferencia es menor a 24 horas en milisegundos (86400000 milisegundos en un día)
+    if (diferenciaTiempo < 86400000) {
+      return res.status(400).json({ msg: "No puedes cancelar la cita con menos de 24 horas de antelación" });
+    }
+
+    emailCancelarCita({
+      email: cita.idPaciente.email,
+      doctorEmail: cita.idDoctor.email,
+      cita,
+    });
+    
+    await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
+    
+    res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
+
 
 export {
-  crearCita
+  crearCita,
+  cancelarCita
 }
