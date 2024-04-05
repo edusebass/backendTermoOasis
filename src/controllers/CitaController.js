@@ -10,7 +10,9 @@ import { enviarEmailCita} from "../config/nodemailer.js";
 import mongoose from "mongoose";
 
 const crearCita = async (req, res) => {
+    // se obtiene los datos del body 
     const { idPaciente, idDoctor, code, dia, inicio, fin } = req.body;
+
     // verifica si estan llenos todos los campos
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 
@@ -36,25 +38,24 @@ const crearCita = async (req, res) => {
       }
       // //
 
-      // Convertir el campo "day" a un objeto Date
-        const dayDate = new Date(dia)
-        // Convertir las fechas de inicio y fin a objetos Date
-        const inicioDate = new Date(inicio)
-        const finDate = new Date(fin)
+      // Convertir las fechas de inicio y fin a objetos Date
+      const diaCita = new Date(dia)
+      const inicioCita = new Date(inicio)
+      const finCita = new Date(fin)
 
-        // Verificar si el inicio y el fin están en el mismo día que el especificado en "day"
-        if (
-            dayDate.getDate() !== inicioDate.getDate() ||
-            dayDate.getMonth() !== inicioDate.getMonth() ||
-            dayDate.getFullYear() !== inicioDate.getFullYear() ||
-            dayDate.getDate() !== finDate.getDate() ||
-            dayDate.getMonth() !== finDate.getMonth() ||
-            dayDate.getFullYear() !== finDate.getFullYear()
-        ) {
-            return res.status(400).json({ msg: "El inicio y el fin de la cita deben estar en el mismo día que el dia de la cita" });
-        }
+      // Verificar si el inicio y el fin están en el mismo día que el especificado en "day"
+      if (
+          diaCita.getDate() !== inicioCita.getDate() ||
+          diaCita.getMonth() !== inicioCita.getMonth() ||
+          diaCita.getFullYear() !== inicioCita.getFullYear() ||
+          diaCita.getDate() !== finCita.getDate() ||
+          diaCita.getMonth() !== finCita.getMonth() ||
+          diaCita.getFullYear() !== finCita.getFullYear()
+      ) {
+          return res.status(400).json({ msg: "El inicio y el fin de la cita deben estar en el mismo día que el dia de la cita" });
+      }
   
-      //verifica la fecha de inicio
+      //verifica la fecha de inicio a crear
       const inicioInput = new Date(req.body.inicio);
       console.log("inicioInput: ", inicioInput);
       
@@ -63,9 +64,6 @@ const crearCita = async (req, res) => {
         inicio: inicioInput.toISOString(),
       });
 
-      
-      console.log("existingCita", existingCita);
-  
       if (existingCita) {
         if (existingCita.idPaciente !== existePaciente[0]._id || existingCita.idDoctor === idDoctor) {
           res
@@ -73,10 +71,12 @@ const crearCita = async (req, res) => {
             .json({ msg: "Ya existe una cita en ese horario!", status: false });
         }
       } else {
-  
+        // si todo sale bien se guarda la cita
+        // se guarda la cita
         const cita = new CitaModelo(req.body);
         await cita.save();
   
+        // se introduce la cita id tanto como en paciente como al doctor
         existePaciente[0].citas.push(cita._id);
         await existePaciente[0].save();
   
@@ -84,6 +84,7 @@ const crearCita = async (req, res) => {
         existeDoctor[0].pacientes.push(idPaciente);
         await existeDoctor[0].save();
   
+        // se envia el email para la cita
         enviarEmailCita({
           nombrePaciente: existePaciente[0].nombre,
           email: existePaciente[0].email,
@@ -93,6 +94,7 @@ const crearCita = async (req, res) => {
         });
   
   
+        // se obtiene la cita creada para mostrar en el status
         const fullCita = await CitaModelo.findById(cita._id)
           .populate("idDoctor")
           .populate("idPaciente");
