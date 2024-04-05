@@ -139,6 +139,32 @@ BODY
 
 Consideraciones: La fecha tanto para el dia inicio y fin debe ser la misma ademas de proporcionar el token
 
+## Cancelar cita
+
+Este endpoint cancela una cita lo que hace es con la cita que esta creada actualiza el campo "isCancelado" a True para saber cual se cancelo
+
+POST
+
+http://localhost:3000/api/citas/cancelar/:id
+
+Ejemplo:
+`http://localhost:3000/api/citas/cancelar/66105676ab20544b5e9d29a9`
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+| Parameter | Type            | Description                 |
+| :-------- | :-------------- | :-------------------------- |
+| `id`      | `id de mongodb` | **Required**. id de la cita |
+
+```
+No se necesita BODY en este caso
+```
+
+**Consideraciones:No se podra cancelar la cita si:**
+
+- el id no es el correcto
+- si la se cancela en el rango de 24 horas antes de que sea la cita
+
 ## Configuración
 
 npm i
