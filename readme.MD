@@ -69,6 +69,7 @@ para loguearse
 ## RECUPERAR CONTRASEÑA
 
 Este endpoint envia el correo con el link del frontend para que ponga su nueva contraseña
+
 POST
 http://localhost:3000/api/recuperar-password
 
