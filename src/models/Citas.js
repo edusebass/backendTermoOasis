@@ -23,6 +23,11 @@ const DateSchema = mongoose.Schema(
       type: String,
       required: false,
     },
+    isCancelado: { 
+      type: Boolean,
+      required: false,
+      default: false
+    },
     idPaciente: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Usuarios",
