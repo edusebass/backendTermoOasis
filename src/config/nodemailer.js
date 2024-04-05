@@ -51,7 +51,7 @@ const emailMailRecuperarContraseña = async (userMail, token) =>{
 
 const enviarEmailCita = async (datos) => {
     const { nombrePaciente, email, especialistemail, code, cita } = datos;
-    console.log(email);
+    console.log("email para enviar: " + email);
   
     let info = await transporter.sendMail({
       //the client email
@@ -63,7 +63,6 @@ const enviarEmailCita = async (datos) => {
       html: `<p> Te han asignado una fecha el ${cita.inicio} </p>
             <p> Recuerda asistir puntualmente</p>
             <p> Además, recuerda que solo puedes cancelar tucita hasta 1 hora antes</p>
-            
             <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
             `,
       code
@@ -71,6 +70,32 @@ const enviarEmailCita = async (datos) => {
     
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
   };
+
+const emailCancelarCita = async (datos) => {
+    // obtiene los datos del controller
+    const { email, doctorEmail, code, cita } = datos;
+    console.log("Nodemailer email para enviar: " + email);
+   
+    const parsedDate = new Date(cita.inicio)
+    const humanDate = parsedDate.toDateString()
+
+    let info = await transporter.sendMail({
+    //the client email
+    to: [`${email}`, `${doctorEmail}`],
+    //sendGrid sender id
+    from: "drbariatrico250@gmail.com",
+    subject: "Tu cita ha sido cancelada",
+    text: "Notificación de cita",
+    html: `<p>Tu cita del ${humanDate} ha sido cancelada</p>
+    <p>Para poder ingresar al sistema debes hacerlo mediante tus credenciales de seguridad </p>
+    <p> Puedes ingresar al sistema mediante el siguiente enlace </p>
+    <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
+    `,
+    });
+
+    console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
+    
+};
 
 // send mail with defined transport object
 // const sendMailToPaciente = async(userMail, password)=>{
@@ -94,6 +119,6 @@ const enviarEmailCita = async (datos) => {
 export {
     sendMailToUser,
     emailMailRecuperarContraseña,
-    enviarEmailCita
-    // sendMailToPaciente
+    enviarEmailCita,
+    emailCancelarCita
 }
