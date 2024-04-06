@@ -165,7 +165,7 @@ No se necesita BODY en este caso
 - el id no es el correcto
 - si la se cancela en el rango de 24 horas antes de que sea la cita
 
-## Mostrar citas
+## Mostrar todas las citas
 
 Este endpoint mostrara las citas ordenadas de la mas lejana a la mas reciente
 
