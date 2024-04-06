@@ -19,14 +19,15 @@ const DateSchema = mongoose.Schema(
       type: String,
       required: false,
     },
-    receta: {
-      type: String,
-      required: false,
-    },
     isCancelado: { 
       type: Boolean,
       required: false,
       default: false
+    },
+    registroMedico: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Registro",
+      required: false,
     },
     idPaciente: {
       type: mongoose.Schema.Types.ObjectId,
