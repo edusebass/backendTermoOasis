@@ -129,8 +129,6 @@ BODY
   "dia": "2024-06-05T00:00:00",
   "inicio": "2024-06-05T07:00:00",
   "fin": "2024-06-05T13:00:00",
-  "comentarios": "Revisión de rutina",
-  "receta": "Paracetamol",
   "idPaciente": "660f0a7a1e74f02e637b968c",
   "idDoctor": "66020ed34753bbd7a76a8d7f"
 }
@@ -191,8 +189,7 @@ Ejemplo de lo que devuelve
       "dia": "2024-04-19T05:00:00.000Z",
       "inicio": "2024-04-19T12:00:00.000Z",
       "fin": "2024-04-19T18:00:00.000Z",
-      "comentarios": "Revisión de rutina",
-      "receta": "Paracetamol",
+      "registroMedico": [],
       "isCancelado": false,
       "idPaciente": "660f0a7a1e74f02e637b968c",
       "idDoctor": "66020ed34753bbd7a76a8d7f",
@@ -205,8 +202,7 @@ Ejemplo de lo que devuelve
       "dia": "2024-04-09T05:00:00.000Z",
       "inicio": "2024-04-09T12:00:00.000Z",
       "fin": "2024-04-09T18:00:00.000Z",
-      "comentarios": "Revisión de rutina",
-      "receta": "Paracetamol",
+      "registroMedico": [],
       "isCancelado": false,
       "idPaciente": "660f0a7a1e74f02e637b968c",
       "idDoctor": "66020ed34753bbd7a76a8d7f",
@@ -219,8 +215,7 @@ Ejemplo de lo que devuelve
       "dia": "2024-04-08T05:00:00.000Z",
       "inicio": "2024-04-08T12:00:00.000Z",
       "fin": "2024-04-08T18:00:00.000Z",
-      "comentarios": "Revisión de rutina",
-      "receta": "Paracetamol",
+      "registroMedico": [],
       "isCancelado": true,
       "idPaciente": "660f0a7a1e74f02e637b968c",
       "idDoctor": "66020ed34753bbd7a76a8d7f",
@@ -236,7 +231,7 @@ Ejemplo de lo que devuelve
 
 ## Mostrar cita especifica
 
-Este endpoint mostrara una cita en especifica por medio del id
+Este endpoint mostrara una cita en especifica por medio del id de la cita
 
 GET
 
@@ -260,8 +255,7 @@ Ejemplo de lo que devuelve
         "dia": "2024-04-19T05:00:00.000Z",
         "inicio": "2024-04-19T12:00:00.000Z",
         "fin": "2024-04-19T18:00:00.000Z",
-        "comentarios": "Revisión de rutina",
-        "receta": "Paracetamol",
+        "registroMedico": idregistroMedico,
         "isCancelado": false,
         "idPaciente": "660f0a7a1e74f02e637b968c",
         "idDoctor": "66020ed34753bbd7a76a8d7f",
@@ -271,6 +265,71 @@ Ejemplo de lo que devuelve
     },
     "status": true
   }
+}
+
+```
+
+## Mostrar citas de un paciente en especifico
+
+Este endpoint mostrara las citas de un paciente id del paciente
+
+GET
+
+http://localhost:3000/api/citas/mostrar/:id
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+```
+
+No se necesita BODY en este caso
+
+```
+
+```
+Ejemplo de lo que devuelve
+
+"data": [
+    {
+      "_id": "66116ddb3281bdbdd6d0695c",
+      "dia": "2024-04-20T05:00:00.000Z",
+      "inicio": "2024-04-20T12:00:00.000Z",
+      "fin": "2024-04-20T18:00:00.000Z",
+      "comentarios": "Revisión de rutina",
+      "receta": "Paracetamol",
+      "isCancelado": false,
+      "idPaciente": "66116d818224da46a29d90ce",
+      "idDoctor": {
+        "_id": "66020ed34753bbd7a76a8d7f",
+        "nombre": "Eduardo",
+        "apellido": "Almachi",
+        "contraseña": "$2a$10$7JtI/hGSO1O5/oDM5M4kM.2hjwmS2LM10N/U5BcnrUViey7XL3ouu",
+        "email": "edu03sebas@gmail.com",
+        "isDoctor": true,
+        "isPaciente": false,
+        "isSecre": false,
+        "citas": [
+          "66105b0c2f1e22b7c7c513f6",
+          "66115d30625d5750c3ad0df3",
+          "66115d3b625d5750c3ad0dfe",
+          "66116ddb3281bdbdd6d0695c"
+        ],
+        "pacientes": [
+          "660f0a7a1e74f02e637b968c",
+          "660f0a7a1e74f02e637b968c",
+          "660f0a7a1e74f02e637b968c",
+          "66116d818224da46a29d90ce"
+        ],
+        "createdAt": "2024-03-25T23:54:59.363Z",
+        "updatedAt": "2024-04-06T15:44:27.356Z",
+        "__v": 54,
+        "token": null
+      },
+      "createdAt": "2024-04-06T15:44:27.347Z",
+      "updatedAt": "2024-04-06T15:44:27.347Z",
+      "__v": 0
+    }
+  ],
+  "status": true
 }
 
 ```
