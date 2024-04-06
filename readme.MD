@@ -165,6 +165,75 @@ No se necesita BODY en este caso
 - el id no es el correcto
 - si la se cancela en el rango de 24 horas antes de que sea la cita
 
+## Mostrar citas
+
+Este endpoint mostrara las citas ordenadas de la mas lejana a la mas reciente
+
+GET
+
+http://localhost:3000/api/citas/mostrar-todas
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+```
+
+No se necesita BODY en este caso
+
+```
+
+```
+Ejemplo de lo que devuelve
+
+{
+  "data": [
+    {
+      "_id": "66115d3b625d5750c3ad0dfe",
+      "dia": "2024-04-19T05:00:00.000Z",
+      "inicio": "2024-04-19T12:00:00.000Z",
+      "fin": "2024-04-19T18:00:00.000Z",
+      "comentarios": "Revisión de rutina",
+      "receta": "Paracetamol",
+      "isCancelado": false,
+      "idPaciente": "660f0a7a1e74f02e637b968c",
+      "idDoctor": "66020ed34753bbd7a76a8d7f",
+      "createdAt": "2024-04-06T14:33:31.144Z",
+      "updatedAt": "2024-04-06T14:33:31.144Z",
+      "__v": 0
+    },
+    {
+      "_id": "66115d30625d5750c3ad0df3",
+      "dia": "2024-04-09T05:00:00.000Z",
+      "inicio": "2024-04-09T12:00:00.000Z",
+      "fin": "2024-04-09T18:00:00.000Z",
+      "comentarios": "Revisión de rutina",
+      "receta": "Paracetamol",
+      "isCancelado": false,
+      "idPaciente": "660f0a7a1e74f02e637b968c",
+      "idDoctor": "66020ed34753bbd7a76a8d7f",
+      "createdAt": "2024-04-06T14:33:20.926Z",
+      "updatedAt": "2024-04-06T14:33:20.926Z",
+      "__v": 0
+    },
+    {
+      "_id": "66105b0c2f1e22b7c7c513f6",
+      "dia": "2024-04-08T05:00:00.000Z",
+      "inicio": "2024-04-08T12:00:00.000Z",
+      "fin": "2024-04-08T18:00:00.000Z",
+      "comentarios": "Revisión de rutina",
+      "receta": "Paracetamol",
+      "isCancelado": true,
+      "idPaciente": "660f0a7a1e74f02e637b968c",
+      "idDoctor": "66020ed34753bbd7a76a8d7f",
+      "createdAt": "2024-04-05T20:11:56.829Z",
+      "updatedAt": "2024-04-05T20:13:11.425Z",
+      "__v": 0
+    }
+  ],
+  "status": true
+}
+
+```
+
 ## Configuración
 
 npm i
@@ -182,3 +251,7 @@ Asegúrate de configurar las siguientes variables de entorno antes de ejecutar l
 - `PASS_MAILTRAP`=
 
 AÑADO ALGO
+
+```
+
+```
