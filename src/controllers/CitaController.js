@@ -196,7 +196,21 @@ const mostrarCitaID = async (req, res) => {
   }
 };
 
-
+const mostrarCitasPorPaciente = async (req, res) => {
+  // id del paciente
+  const { id } = req.params;
+  try {
+     // obtiene las citas para un paciente en esp
+      const dates = await CitaModelo.find({
+        idPaciente: new mongoose.Types.ObjectId(id),
+      })
+        .populate("idDoctor");
+      res.status(200).json({ data: dates, status: true });
+    
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
 
 export {
   crearCita,
