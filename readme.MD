@@ -234,6 +234,47 @@ Ejemplo de lo que devuelve
 
 ```
 
+## Mostrar cita especifica
+
+Este endpoint mostrara una cita en especifica por medio del id
+
+GET
+
+http://localhost:3000/api/citas/mostrar/:id
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+```
+
+No se necesita BODY en este caso
+
+```
+
+```
+Ejemplo de lo que devuelve
+
+{
+  {
+    "data": {
+        "_id": "66115d3b625d5750c3ad0dfe",
+        "dia": "2024-04-19T05:00:00.000Z",
+        "inicio": "2024-04-19T12:00:00.000Z",
+        "fin": "2024-04-19T18:00:00.000Z",
+        "comentarios": "Revisión de rutina",
+        "receta": "Paracetamol",
+        "isCancelado": false,
+        "idPaciente": "660f0a7a1e74f02e637b968c",
+        "idDoctor": "66020ed34753bbd7a76a8d7f",
+        "createdAt": "2024-04-06T14:33:31.144Z",
+        "updatedAt": "2024-04-06T14:33:31.144Z",
+        "__v": 0
+    },
+    "status": true
+  }
+}
+
+```
+
 ## Configuración
 
 npm i
