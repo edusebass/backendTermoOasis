@@ -158,8 +158,28 @@ const cancelarCita = async (req, res) => {
   }
 };
 
+const mostrarCitas = async (req, res) => {
+  // const { user } = req;
+
+  // if (!user.isDoctor) {
+  //   const error = new Error("Usuario no autorizado para esta accion");
+  //   return res.status(400).json({ msg: error.message, status: false });
+  // }
+
+  try {
+    const citas = await CitaModelo.find();
+
+    citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
+
+    res.status(200).json({ data: citas, status: true });
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
+
 
 export {
   crearCita,
-  cancelarCita
+  cancelarCita,
+  mostrarCitas
 }
