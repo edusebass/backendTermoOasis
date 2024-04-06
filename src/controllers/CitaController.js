@@ -167,8 +167,10 @@ const mostrarCitas = async (req, res) => {
   // }
 
   try {
+    // obtiene la cita
     const citas = await CitaModelo.find();
 
+    // ordena el orden de muestra de la cita
     citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
 
     res.status(200).json({ data: citas, status: true });
@@ -177,9 +179,29 @@ const mostrarCitas = async (req, res) => {
   }
 };
 
+const mostrarCitaID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    // obtiene la cita por el id
+    const citaExist = await CitaModelo.findById(id);
+
+    // si no existe salta un error
+    if (!citaExist) {
+      const error = new Error("Cita no existe");
+      return res.status(401).json({ msg: error.message });
+    }
+    res.status(200).json({ data: citaExist, status: true });
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
+
+
 
 export {
   crearCita,
   cancelarCita,
-  mostrarCitas
+  mostrarCitas,
+  mostrarCitaID,
+  mostrarCitasPorPaciente
 }
