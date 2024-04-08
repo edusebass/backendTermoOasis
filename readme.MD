@@ -163,6 +163,38 @@ No se necesita BODY en este caso
 - el id no es el correcto
 - si la se cancela en el rango de 24 horas antes de que sea la cita
 
+## Actualizar cita
+
+Este endpoint actualizara una cita lo que hace es con la cita que esta creada actualiza lo que le mandemos en el body
+
+POST
+
+http://localhost:3000/api/citas/actualizar/:id
+
+Ejemplo:
+`http://localhost:3000/api/citas/actualizar/66105676ab20544b5e9d29a9`
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+| Parameter | Type            | Description                 |
+| :-------- | :-------------- | :-------------------------- |
+| `id`      | `id de mongodb` | **Required**. id de la cita |
+
+```
+BODY
+{
+  "dia": "2025-04-08T05:00:00.000+00:00",
+  "inicio": "2025-04-08T05:00:00.000+00:00",
+  "fin": "2025-04-08T06:00:00.000+00:00",
+  "comentarios": "nuevo valor de comentarios"
+
+}
+```
+
+**Consideraciones:No se podra cancelar la cita si:**
+
+- el id no es el correcto
+
 ## Mostrar todas las citas
 
 Este endpoint mostrara las citas ordenadas de la mas lejana a la mas reciente

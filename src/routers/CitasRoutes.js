@@ -5,7 +5,8 @@ import{
     crearCita,
     mostrarCitas,
     mostrarCitaID,
-    mostrarCitasPorPaciente
+    mostrarCitasPorPaciente,
+    editarCita
 } from "../controllers/CitaController.js";
 const citaRouter = Router()
 
@@ -14,6 +15,8 @@ citaRouter.post("/cancelar/:id", verificarAutenticacion, cancelarCita)
 citaRouter.get("/mostrar-todas", verificarAutenticacion, mostrarCitas) 
 citaRouter.get("/mostrar/:id", verificarAutenticacion, mostrarCitaID) 
 citaRouter.get("/mostrar-por-paciente/:id", verificarAutenticacion, mostrarCitasPorPaciente) 
+citaRouter.put("/actualizar/:id", editarCita);
+
 
 
 export default citaRouter

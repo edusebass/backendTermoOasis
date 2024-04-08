@@ -50,7 +50,7 @@ const emailMailRecuperarContraseña = async (userMail, token) =>{
 }
 
 const enviarEmailCita = async (datos) => {
-    const { nombrePaciente, email, especialistemail, code, cita } = datos;
+    const { nombrePaciente, email, especialistemail, cita } = datos;
     console.log("email para enviar: " + email);
   
     let info = await transporter.sendMail({
@@ -73,7 +73,7 @@ const enviarEmailCita = async (datos) => {
 
 const emailCancelarCita = async (datos) => {
     // obtiene los datos del controller
-    const { email, doctorEmail, code, cita } = datos;
+    const { email, doctorEmail, cita } = datos;
     console.log("Nodemailer email para enviar: " + email);
    
     const parsedDate = new Date(cita.inicio)
@@ -97,28 +97,39 @@ const emailCancelarCita = async (datos) => {
     
 };
 
-// send mail with defined transport object
-// const sendMailToPaciente = async(userMail, password)=>{
-//     let info = await transporter.sendMail({
-//     from: 'admin@vet.com',
-//     to: userMail,
-//     subject: "Correo de bienvenida",
-//     html: `
-//     <h1>Sistema de gestión (VET-ESFOT 🐶 😺)</h1>
-//     <hr>
-//     <p>Contraseña de acceso: ${password}</p>
-//     <a href=${process.env.URL_BACKEND}paciente/login>Clic para iniciar sesión</a>
-//     <hr>
-//     <footer>Grandote te da la Bienvenida!</footer>
-//     `
-//     });
-//     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
-// }
+const emailActualizarCita = async (datos) => {
+    // obtiene los datos del controller
+    const { email, doctorEmail, cita } = datos;
+    console.log("Nodemailer email para enviar: " + email);
+   
+    const parsedDate = new Date(cita.inicio)
+    const humanDate = parsedDate.toDateString()
+
+    let info = await transporter.sendMail({
+    //the client email
+    to: [`${email}`, `${doctorEmail}`],
+    //sendGrid sender id
+    from: "drbariatrico250@gmail.com",
+    subject: "Tu cita ha sido actualizada",
+    text: "Notificación de cita",
+    html: `<p>Tu cita del ${humanDate} ha sido actualizada</p>
+    <p>Para poder ingresar al sistema debes hacerlo mediante tus credenciales de seguridad</p>
+    <p>Se actualizo tu cita para ${parsedDate} </p>
+    <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
+    `,
+    });
+
+    console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
+    
+};
+
+
 
 
 export {
     sendMailToUser,
     emailMailRecuperarContraseña,
+    emailActualizarCita,
     enviarEmailCita,
     emailCancelarCita
 }

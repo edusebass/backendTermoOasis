@@ -1,13 +1,7 @@
-// import {
-//   emailCancelDate,
-//   emailDate,
-//   emailUpdateDate,
-// } from "../helpers/emails.js";
-// import { supaNotif } from "../index.js";
+import mongoose from "mongoose";
 import CitaModelo from "../models/Citas.js";
 import UsuarioModelo from "../models/Usuario.js";
-import { emailCancelarCita, enviarEmailCita} from "../config/nodemailer.js";
-import mongoose from "mongoose";
+import { emailActualizarCita, emailCancelarCita, enviarEmailCita} from "../config/nodemailer.js";
 
 const crearCita = async (req, res) => {
     // se obtiene los datos del body 
@@ -158,6 +152,59 @@ const cancelarCita = async (req, res) => {
   }
 };
 
+const editarCita = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const cita = await CitaModelo.findById(id);
+
+    if (!cita) {
+      const error = new Error("Cita no encontrada");
+      return res.status(401).json({ msg: error.message });
+    } else if (cita){
+      cita.dia = req.body.dia || cita.dia;
+      cita.inicio = req.body.inicio || cita.inicio;
+      cita.fin = req.body.fin || cita.fin;
+      cita.comentarios = req.body.comentarios || cita.comentarios;
+      cita.isCancelado = req.body.isCancelado || cita.isCancelado;
+      const citastored = await cita.save();
+
+      const existPaciente = await UsuarioModelo.find({
+        _id: cita.idPaciente,
+        isPaciente: true,
+      });
+      const existDoctor = await UsuarioModelo.find({
+        _id: cita.idDoctor,
+        isDoctor: true
+      });
+
+      if (!existPaciente[0]) {
+        const error = new Error("Paciente no registrado");
+        return res.status(400).json({ msg: error.message, status: false });
+      }
+
+      if (!existDoctor[0]) {
+        const error = new Error("Especialista no registrado");
+        return res.status(400).json({ msg: error.message, status: false });
+      }
+
+      emailActualizarCita({
+        firstname: existPaciente[0].nombre,
+        email: existPaciente[0].email,
+        especialistemail: existDoctor[0].email,
+        cita
+      });
+
+      res.status(200).json({ msg: citastored, status: true });
+    } else {
+      const error = new Error("Usuario no autorizado para esta accion");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
+  } catch (error) {
+    res.status(404).json({ msg: "El id que ingresaste no es valido" });
+  }
+};
+
 const mostrarCitas = async (req, res) => {
   // const { user } = req;
 
@@ -214,6 +261,7 @@ const mostrarCitasPorPaciente = async (req, res) => {
 
 export {
   crearCita,
+  editarCita,
   cancelarCita,
   mostrarCitas,
   mostrarCitaID,
