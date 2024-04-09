@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const RegistroSchema = mongoose.Schema(
   {
-    iddate: {
+    idCita: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Citas",
       required: true,

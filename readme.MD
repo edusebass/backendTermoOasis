@@ -362,7 +362,200 @@ Ejemplo de lo que devuelve
     }
   ],
   "status": true
+
+
+```
+
+# REGISTRO MEDICO
+
+Este endpoint guarda un registro medico del paciente
+
+POST
+
+http://localhost:3000/api/registroMedico/crear
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+```
+
+BODY
+
+{
+  "idCita": "66105b0c2f1e22b7c7c513f6",
+  "idPaciente": "660f0a7a1e74f02e637b968c",
+  "idDoctor": "66020ed34753bbd7a76a8d7f",
+  "receta": [
+    {
+      "nombre": "Ibuprofeno 400mg",
+      "dosis": "1 comprimido",
+      "frecuencia": "Cada 8 horas"
+    },
+    {
+      "nombre": "Amoxicilina 500mg",
+      "dosis": "1 comprimido",
+      "frecuencia": "Cada 12 horas"
+    }
+  ],
+  "dieta": [
+    {
+      "descripcion": "Dieta baja en grasas"
+    }
+  ],
+  "actividad": [
+    {
+      "descripcion": "Realizar ejercicio moderado"
+    }
+  ],
+  "cuidados": [
+    {
+      "descripcion": "Mantener reposo absoluto"
+    }
+  ],
+  "generalInfo": {
+    "fechaNacimiento": "1990-05-15",
+    "lugarNacimiento": "Ciudad de México",
+    "cedula": "123456789",
+    "estadoCivil": "Soltero",
+    "ocupacion": "Estudiante"
+  },
+  "contactInfo": {
+    "direccion": "Calle Principal #123",
+    "telefono": 5551234567
+  },
+  "informacionMedica": {
+    "altura": 170,
+    "peso": 70
+  },
+  "comments": "Paciente presenta síntomas leves de gripe."
 }
+
+
+```
+
+RESULT
+
+```
+Ejemplo de lo que devuelve
+
+
+  "msg": "Registro Medico creado Correctamente",
+  "status": true,
+  "data": {
+    "generalInfo": {
+      "fechaNacimiento": "1990-05-15T00:00:00.000Z",
+      "lugarNacimiento": "Ciudad de México",
+      "cedula": "123456789",
+      "estadoCivil": "Soltero",
+      "ocupacion": "Estudiante"
+    },
+    "contactInfo": {
+      "direccion": "Calle Principal #123",
+      "telefono": 5551234567
+    },
+    "informacionMedica": {
+      "altura": 170,
+      "peso": 70
+    },
+    "_id": "661593151fa56e74ed7a8a86",
+    "idCita": {
+      "_id": "66105b0c2f1e22b7c7c513f6",
+      "dia": "2025-04-08T05:00:00.000Z",
+      "inicio": "2025-04-08T05:00:00.000Z",
+      "fin": "2025-04-08T06:00:00.000Z",
+      "comentarios": "nuevo valor de comentarios",
+      "receta": "Paracetamol",
+      "isCancelado": true,
+      "idPaciente": "660f0a7a1e74f02e637b968c",
+      "idDoctor": "66020ed34753bbd7a76a8d7f",
+      "createdAt": "2024-04-05T20:11:56.829Z",
+      "updatedAt": "2024-04-09T19:12:21.209Z",
+      "__v": 0,
+      "registroMedico": "661593151fa56e74ed7a8a86"
+    },
+    "idPaciente": {
+      "_id": "660f0a7a1e74f02e637b968c",
+      "nombre": "Sebastian",
+      "apellido": "Maisincho",
+      "contraseña": "$2a$10$STyiWdEoJQJ6GcfJw2Zld.857q4fAxkz7t4MISMLp7Pm46zoMiYcK",
+      "email": "edubin560@gmail.com",
+      "isDoctor": false,
+      "isPaciente": true,
+      "isSecre": false,
+      "citas": [
+        "66105b0c2f1e22b7c7c513f6",
+        "66115d30625d5750c3ad0df3",
+        "66115d3b625d5750c3ad0dfe"
+      ],
+      "pacientes": [],
+      "createdAt": "2024-04-04T20:15:54.769Z",
+      "updatedAt": "2024-04-06T14:33:31.147Z",
+      "__v": 53
+    },
+    "idDoctor": {
+      "_id": "66020ed34753bbd7a76a8d7f",
+      "nombre": "Eduardo",
+      "apellido": "Almachi",
+      "contraseña": "$2a$10$7JtI/hGSO1O5/oDM5M4kM.2hjwmS2LM10N/U5BcnrUViey7XL3ouu",
+      "email": "edu03sebas@gmail.com",
+      "isDoctor": true,
+      "isPaciente": false,
+      "isSecre": false,
+      "citas": [
+        "66105b0c2f1e22b7c7c513f6",
+        "66115d30625d5750c3ad0df3",
+        "66115d3b625d5750c3ad0dfe",
+        "66116ddb3281bdbdd6d0695c"
+      ],
+      "pacientes": [
+        "660f0a7a1e74f02e637b968c",
+        "660f0a7a1e74f02e637b968c",
+        "660f0a7a1e74f02e637b968c",
+        "66116d818224da46a29d90ce"
+      ],
+      "createdAt": "2024-03-25T23:54:59.363Z",
+      "updatedAt": "2024-04-06T15:44:27.356Z",
+      "__v": 54,
+      "token": null
+    },
+    "receta": [
+      {
+        "nombre": "Ibuprofeno 400mg",
+        "dosis": "1 comprimido",
+        "frecuencia": "Cada 8 horas",
+        "_id": "661593151fa56e74ed7a8a87"
+      },
+      {
+        "nombre": "Amoxicilina 500mg",
+        "dosis": "1 comprimido",
+        "frecuencia": "Cada 12 horas",
+        "_id": "661593151fa56e74ed7a8a88"
+      }
+    ],
+    "dieta": [
+      {
+        "descripcion": "Dieta baja en grasas",
+        "_id": "661593151fa56e74ed7a8a89"
+      }
+    ],
+    "actividad": [
+      {
+        "descripcion": "Realizar ejercicio moderado",
+        "_id": "661593151fa56e74ed7a8a8a"
+      }
+    ],
+    "cuidados": [
+      {
+        "descripcion": "Mantener reposo absoluto",
+        "_id": "661593151fa56e74ed7a8a8b"
+      }
+    ],
+    "comments": "Paciente presenta síntomas leves de gripe.",
+    "createdAt": "2024-04-09T19:12:21.203Z",
+    "updatedAt": "2024-04-09T19:12:21.203Z",
+    "__v": 0
+  }
+}
+
 
 ```
 
