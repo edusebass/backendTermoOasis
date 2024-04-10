@@ -65,7 +65,6 @@ const enviarEmailCita = async (datos) => {
             <p> Además, recuerda que solo puedes cancelar tucita hasta 1 hora antes</p>
             <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
             `,
-      code
     })
     
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
