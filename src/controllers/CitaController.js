@@ -75,7 +75,14 @@ const crearCita = async (req, res) => {
       } else {
         // si todo sale bien se guarda la cita
         // se guarda la cita
-        const cita = new CitaModelo(req.body);
+        const cita = new CitaModelo({
+          idPaciente,
+          idDoctor,
+          dia,
+          inicio,
+          fin,
+          registroMedico: null, 
+        });
         await cita.save();
   
         // se introduce la cita id tanto como en paciente como al doctor
@@ -99,7 +106,8 @@ const crearCita = async (req, res) => {
         // se obtiene la cita creada para mostrar en el status
         const fullCita = await CitaModelo.findById(cita._id)
           .populate("idDoctor")
-          .populate("idPaciente");
+          .populate("idPaciente")
+          .populate("registroMedico")
   
         res.status(200).json({ msg: "Cita agendada correctamente", status: true, data: fullCita });
       }
