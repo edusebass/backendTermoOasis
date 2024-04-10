@@ -368,6 +368,8 @@ Ejemplo de lo que devuelve
 
 # REGISTRO MEDICO
 
+## Crear el registro medico
+
 Este endpoint guarda un registro medico del paciente
 
 POST
@@ -555,8 +557,20 @@ Ejemplo de lo que devuelve
     "__v": 0
   }
 }
+```
 
+## Crear el registro medico
 
+Este endpoint mostrara todos los regsitros medicos sin excepcion algunae
+
+GET
+
+http://localhost:3000/api/registroMedico/listar
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+```
+NO SE NECESITA BODY EN ESTA CASO
 ```
 
 ## Configuración

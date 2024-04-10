@@ -54,6 +54,21 @@ const crearRegistro = async (req, res) => {
   }
 };
 
+const obtenerRegistros = async (req, res) => {
+  const { user } = req;
+
+  try {
+    const registro = await RegistroMedicoModelo.find();
+
+    // registro.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
+
+    res.status(200).json({ data: registro, status: true });
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
+
 export {
-    crearRegistro
+    crearRegistro,
+    obtenerRegistros
 }
