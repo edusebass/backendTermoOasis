@@ -55,7 +55,7 @@ const crearRegistro = async (req, res) => {
 };
 
 const obtenerRegistros = async (req, res) => {
-  const { user } = req;
+  // const { user } = req;
 
   try {
     const registro = await RegistroMedicoModelo.find();
