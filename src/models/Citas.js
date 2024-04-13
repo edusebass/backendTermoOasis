@@ -2,17 +2,17 @@ import mongoose from "mongoose";
 
 const DateSchema = mongoose.Schema(
   {
-    dia: {
-      type: Date,
+    // dia: {
+    //   type: Date,
+    //   required: true,
+    //   trim: true,
+    // },
+    start: {
+      type: String,
       required: true,
-      trim: true,
     },
-    inicio: {
-      type: Date,
-      required: true,
-    },
-    fin: {
-      type: Date,
+    end: {
+      type: String,
       required: true,
     },
     comentarios: {

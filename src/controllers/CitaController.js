@@ -5,7 +5,7 @@ import { emailActualizarCita, emailCancelarCita, enviarEmailCita} from "../confi
 
 const crearCita = async (req, res) => {
     // se obtiene los datos del body 
-    const { idPaciente, idDoctor, code, dia, inicio, fin } = req.body;
+    const { idPaciente, idDoctor, code, dia, start, end } = req.body;
 
     // verifica si estan llenos todos los campos
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
@@ -37,33 +37,33 @@ const crearCita = async (req, res) => {
       
       
       // Convertir las fechas de inicio y fin a objetos Date
-      const ahora = new Date();
-      const diaCita = new Date(dia)
-      const inicioCita = new Date(inicio)
-      const finCita = new Date(fin)
+    //   const ahora = new Date();
+    //   const diaCita = new Date(dia)
+    //   const inicioCita = new Date(inicio)
+    //   const finCita = new Date(fin)
 
-      if (inicioCita < ahora) {
-        return res.status(400).json({ msg: "No puedes agendar una cita en el pasado" });
-    }
+    //   if (inicioCita < ahora) {
+    //     return res.status(400).json({ msg: "No puedes agendar una cita en el pasado" });
+    // }
       // Verificar si el inicio y el fin están en el mismo día que el especificado en "day"
-      if (
-          diaCita.getDate() !== inicioCita.getDate() ||
-          diaCita.getMonth() !== inicioCita.getMonth() ||
-          diaCita.getFullYear() !== inicioCita.getFullYear() ||
-          diaCita.getDate() !== finCita.getDate() ||
-          diaCita.getMonth() !== finCita.getMonth() ||
-          diaCita.getFullYear() !== finCita.getFullYear()
-      ) {
-          return res.status(400).json({ msg: "El inicio y el fin de la cita deben estar en el mismo día que el dia de la cita" });
-      }
+      // if (
+      //     diaCita.getDate() !== inicioCita.getDate() ||
+      //     diaCita.getMonth() !== inicioCita.getMonth() ||
+      //     diaCita.getFullYear() !== inicioCita.getFullYear() ||
+      //     diaCita.getDate() !== finCita.getDate() ||
+      //     diaCita.getMonth() !== finCita.getMonth() ||
+      //     diaCita.getFullYear() !== finCita.getFullYear()
+      // ) {
+      //     return res.status(400).json({ msg: "El inicio y el fin de la cita deben estar en el mismo día que el dia de la cita" });
+      // }
   
       //verifica la fecha de inicio a crear
-      const inicioInput = new Date(req.body.inicio);
+      const inicioInput = new Date(req.body.start);
       console.log("inicioInput: ", inicioInput);
       
       // Verificar si ya existe una cita con la misma hora de inicio
       const existingCita = await CitaModelo.findOne({
-        inicio: inicioInput.toISOString(),
+        start: inicioInput.toISOString(),
       });
 
       if (existingCita) {
@@ -78,9 +78,8 @@ const crearCita = async (req, res) => {
         const cita = new CitaModelo({
           idPaciente,
           idDoctor,
-          dia,
-          inicio,
-          fin,
+          start,
+          end,
           registroMedico: null, 
         });
         await cita.save();
