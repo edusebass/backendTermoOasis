@@ -2,6 +2,7 @@ import Usuario from "../models/Usuario.js";
 import generarJWT from "../helpers/crearJWT.js"
 import mongoose from "mongoose";
 import { emailMailRecuperarContraseña } from "../config/nodemailer.js";
+import UsuarioModelo from "../models/Usuario.js";
 
 const login = async(req,res)=>{
     const {email,contraseña} = req.body
@@ -71,11 +72,39 @@ const nuevaContraseña = async (req,res)=>{
     res.status(200).json({msg:"Felicitaciones, ya puedes iniciar sesión con tu nuevo contraseña"}) 
 }
 
+const obtenerPacientes = async (req, res) => {
+    // const { user } = req;
+  
+    try {
+    //   const pacientes = await UsuarioModelo.find({ isPaciente: true }).populate({
+    //     path: "dates",
+    //     populate: {
+    //       path: "record",
+    //     },
+    //   });
+      const pacientes = await UsuarioModelo.find({ isPaciente: true })
+
+      res.status(200).json({ data: pacientes, status: true });
+    //   console.log(pacientes);
+    } catch (error) {
+      res.status(400).json({ msg: error.message, status: false });
+    }
+  };
+
+  const perfil =(req,res)=>{
+    delete req.usuarioBDD.token
+    delete req.usuarioBDD.createdAt
+    delete req.usuarioBDD.updatedAt
+    delete req.usuarioBDD.__v
+    res.status(200).json(req.usuarioBDD)
+}
+
 export{
     login,
     registro,
     recuperarContraseña,
-    nuevaContraseña
-    // perfil,
-    // detalleUsuario
+    nuevaContraseña,
+    obtenerPacientes,
+    perfil
+    
 }
