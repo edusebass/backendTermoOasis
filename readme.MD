@@ -559,7 +559,7 @@ Ejemplo de lo que devuelve
 }
 ```
 
-## Crear el registro medico
+## Mostrar todos los registro medicos
 
 Este endpoint mostrara todos los regsitros medicos sin excepcion algunae
 
@@ -572,6 +572,8 @@ http://localhost:3000/api/registroMedico/listar
 ```
 NO SE NECESITA BODY EN ESTA CASO
 ```
+
+---
 
 ## Configuración
 
