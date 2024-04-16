@@ -5,7 +5,7 @@ import { emailActualizarCita, emailCancelarCita, enviarEmailCita} from "../confi
 
 const crearCita = async (req, res) => {
     // se obtiene los datos del body 
-    const { idPaciente, idDoctor, code, dia, start, end } = req.body;
+    const { idPaciente, idDoctor, start, end, comentarios } = req.body;
 
     // verifica si estan llenos todos los campos
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
@@ -80,6 +80,7 @@ const crearCita = async (req, res) => {
           idDoctor,
           start,
           end,
+          comentarios,
           registroMedico: null, 
         });
         await cita.save();
@@ -97,7 +98,6 @@ const crearCita = async (req, res) => {
           nombrePaciente: existePaciente[0].nombre,
           email: existePaciente[0].email,
           emailDoctor: existeDoctor[0].email,
-          code,
           cita: cita
         });
   
@@ -222,7 +222,7 @@ const mostrarCitas = async (req, res) => {
 
   try {
     // obtiene la cita
-    const citas = await CitaModelo.find();
+    const citas = await CitaModelo.find()
 
     // ordena el orden de muestra de la cita
     citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
