@@ -39,7 +39,7 @@ const emailMailRecuperarContraseña = async (userMail, token) =>{
     <h1>TERMO OASIS</h1>
     <hr>
     
-    http://localhost:3000/nueva-password/${token}
+    <a href=${process.env.URL_FRONTEND}restablecerPass/${token}>
     <hr>
     Ese seria el endpoint que devolveria al correo y que se deberia utilizar 
     <footer>Manos que curan con amor</footer>
