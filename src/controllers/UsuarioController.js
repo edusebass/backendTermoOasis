@@ -59,6 +59,14 @@ const recuperarContraseña = async(req,res)=>{
     
 }
 
+const comprobarTokenContraseña = async (req,res)=>{
+    if(!(req.params.token)) return res.status(404).json({msg:"Lo sentimos, no se puede validar la cuenta"})
+    const usuarioBDD = await UsuarioModelo.findOne({token:req.params.token})
+    if(usuarioBDD?.token !== req.params.token) return res.status(404).json({msg:"Lo sentimos, no se puede validar la cuenta"})
+    await usuarioBDD.save()
+    res.status(200).json({msg:"Token confirmado, ya puedes crear tu nuevo password"}) 
+}
+
 const nuevaContraseña = async (req,res)=>{
     const{contraseña, confirmContraseña} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
@@ -89,9 +97,9 @@ const obtenerPacientes = async (req, res) => {
     } catch (error) {
       res.status(400).json({ msg: error.message, status: false });
     }
-  };
+};
 
-  const perfil =(req,res)=>{
+const perfil =(req,res)=>{
     delete req.usuarioBDD.token
     delete req.usuarioBDD.createdAt
     delete req.usuarioBDD.updatedAt
@@ -99,12 +107,13 @@ const obtenerPacientes = async (req, res) => {
     res.status(200).json(req.usuarioBDD)
 }
 
+
 export{
     login,
     registro,
     recuperarContraseña,
     nuevaContraseña,
     obtenerPacientes,
-    perfil
-    
+    perfil,
+    comprobarTokenContraseña
 }
