@@ -107,9 +107,13 @@ BODY
     }
 ```
 
-#
+## Comprobar token password
 
-#
+POST
+
+http://localhost:3000/api/recuperar-password/:token
+
+Este endpoint comprueba el token que recibe con el del ususario que quiere restablecer la contraseña
 
 # CITAS
 
