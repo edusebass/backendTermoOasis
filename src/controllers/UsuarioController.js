@@ -12,12 +12,15 @@ const login = async(req,res)=>{
     const verificarcontraseña = await usuarioBDD.matchContraseña(contraseña)
     if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, el contraseña no es el correcto"})
     const token = generarJWT(usuarioBDD._id,"usuario")
-    const {nombre,apellido,_id} = usuarioBDD
+    const {nombre,apellido, _id, isPaciente, isDoctor, isSecre} = usuarioBDD
     res.status(200).json({
         token,
         nombre,
         apellido,
         _id,
+        isDoctor,
+        isPaciente,
+        isSecre,
         email:usuarioBDD.email
     })
 }

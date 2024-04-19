@@ -222,7 +222,7 @@ const mostrarCitas = async (req, res) => {
 
   try {
     // obtiene la cita
-    const citas = await CitaModelo.find()
+    const citas = await CitaModelo.find().populate("idPaciente")
 
     // ordena el orden de muestra de la cita
     citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
