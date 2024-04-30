@@ -579,6 +579,31 @@ NO SE NECESITA BODY EN ESTA CASO
 
 ---
 
+## Mostrar registros por paciente
+
+Este endpoint actualizara una cita lo que hace es con la cita que esta creada actualiza lo que le mandemos en el body
+
+POST
+
+http://localhost:3000/api/registroMedico/:id
+Ejemplo:
+`http://localhost:3000/api/registroMedico/66116d818224da46a29d90ce
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
+
+| Parameter | Type            | Description                   |
+| :-------- | :-------------- | :---------------------------- |
+| `id`      | `id de mongodb` | **Required**. id del Paciente |
+
+```
+BODY
+ no se necesita body
+```
+
+**Consideraciones:No se podra cancelar la cita si:**
+
+- el id no es el correcto
+
 ## Configuración
 
 npm i

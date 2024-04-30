@@ -42,12 +42,12 @@ const crearRegistro = async (req, res) => {
     await existCita[0].save();
     
 
-    const fullRegistro = await RegistroMedicoModelo.findById(registro._id).populate("idDoctor").populate("idCita").populate("idPaciente")
+    // const fullRegistro = await RegistroMedicoModelo.findById(registro._id).populate("idDoctor").populate("idCita").populate("idPaciente")
     
 
     res
       .status(200)
-      .json({ msg: "Registro Medico creado Correctamente", status: true, data: fullRegistro });
+      .json({ msg: "Registro Medico creado Correctamente", status: true });
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ msg: error.message, status: false });
@@ -67,8 +67,22 @@ const obtenerRegistros = async (req, res) => {
     res.status(400).json({ msg: error.message, status: false });
   }
 };
+const obtenerRegistroPaciente = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const registro = await RegistroMedicoModelo.findOne({ idPaciente: id });
+
+    // registro.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
+
+    res.status(200).json({ data: registro, status: true });
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
 
 export {
     crearRegistro,
-    obtenerRegistros
+    obtenerRegistros,
+    obtenerRegistroPaciente
 }
