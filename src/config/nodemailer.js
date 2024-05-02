@@ -2,7 +2,6 @@ import nodemailer from "nodemailer"
 import dotenv from 'dotenv'
 dotenv.config()
 
-
 let transporter = nodemailer.createTransport({
     service: 'gmail',
     host: process.env.HOST_MAILTRAP,
@@ -15,7 +14,7 @@ let transporter = nodemailer.createTransport({
 
 const sendMailToUser = async(userMail,token)=>{
     let info = await transporter.sendMail({
-    from: 'admin@vet.com',
+    from: 'termooasis@gma.com',
     to: userMail,
     subject: "Verifica tu cuenta de correo electrónico",
     html: `
@@ -121,9 +120,6 @@ const emailActualizarCita = async (datos) => {
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
     
 };
-
-
-
 
 export {
     sendMailToUser,
