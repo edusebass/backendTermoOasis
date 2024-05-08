@@ -1,8 +1,9 @@
 import Usuario from "../models/Usuario.js";
 import generarJWT from "../helpers/crearJWT.js"
 import mongoose from "mongoose";
-import { emailMailRecuperarContraseña } from "../config/nodemailer.js";
+import { emailMailRecuperarContraseña, emailMailRecuperarContraseñaMovil } from "../config/nodemailer.js";
 import UsuarioModelo from "../models/Usuario.js";
+import { generateRandomPassword } from "../helpers/genradorContraseña.js";
 
 const login = async(req,res)=>{
     const {email,contraseña} = req.body
@@ -110,6 +111,22 @@ const perfil =(req,res)=>{
     res.status(200).json(req.usuarioBDD)
 }
 
+const recuperarContraseñaMovil = async (req,res) => {
+    const {email} = req.body
+    if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
+    // Verifica si existe el usuario
+    const usuarioBDD = await Usuario.findOne({email})
+    if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
+    // si existe envia el email
+    const nuevaContraseña = generateRandomPassword()
+    await emailMailRecuperarContraseñaMovil(email, nuevaContraseña)
+    usuarioBDD.contraseña = await usuarioBDD.encrypContraseña(nuevaContraseña)
+    await usuarioBDD.save()
+    res.status(200).json({msg:"Se envio tu nueva contraseña a tu correo"}) 
+}
+
+
+
 
 export{
     login,
@@ -118,5 +135,6 @@ export{
     nuevaContraseña,
     obtenerPacientes,
     perfil,
-    comprobarTokenContraseña
+    comprobarTokenContraseña,
+    recuperarContraseñaMovil
 }
