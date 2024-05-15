@@ -118,7 +118,7 @@ const recuperarContraseñaMovil = async (req, res) => {
     }
 
     const { email } = usuarioBDD;
-    
+
     // si existe, envía el email
     const nuevaContraseña = generateRandomPassword();
 
@@ -126,7 +126,7 @@ const recuperarContraseñaMovil = async (req, res) => {
     usuarioBDD.contraseña = await usuarioBDD.encrypContraseña(nuevaContraseña);
     await usuarioBDD.save();
 
-    res.status(200).json({ msg: "Se envió tu nueva contraseña a tu correo" });
+    res.status(200).json({ msg: "Se envió tu nueva contraseña al correo registrado del usuario" });
 }
 
 
