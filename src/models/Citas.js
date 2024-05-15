@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const DateSchema = mongoose.Schema(
   {
-    // dia: {
-    //   type: Date,
-    //   required: true,
-    //   trim: true,
-    // },
     start: {
       type: String,
       required: true,

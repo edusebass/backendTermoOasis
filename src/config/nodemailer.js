@@ -12,22 +12,6 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-const sendMailToUser = async(userMail,token)=>{
-    let info = await transporter.sendMail({
-    from: 'termooasis@gma.com',
-    to: userMail,
-    subject: "Verifica tu cuenta de correo electrónico",
-    html: `
-    <h1>Sistema de gestión (VET-ESFOT 🐶 😺)</h1>
-    <hr>
-    <a href=${process.env.URL_FRONTEND}confirmar/${token}>Clic para confirmar tu cuenta</a>
-    <hr>
-    <footer>Grandote te da la Bienvenida!</footer>
-    `
-    });
-    console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
-}
-
 // send mail with defined transport object
 const emailMailRecuperarContraseña = async (userMail, token) =>{
     let info = await transporter.sendMail({
@@ -143,7 +127,6 @@ const emailActualizarCita = async (datos) => {
 };
 
 export {
-    sendMailToUser,
     emailMailRecuperarContraseña,
     emailActualizarCita,
     enviarEmailCita,

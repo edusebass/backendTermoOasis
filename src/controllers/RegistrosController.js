@@ -40,10 +40,6 @@ const crearRegistro = async (req, res) => {
 
     existCita[0].registroMedico = registro._id;
     await existCita[0].save();
-    
-
-    // const fullRegistro = await RegistroMedicoModelo.findById(registro._id).populate("idDoctor").populate("idCita").populate("idPaciente")
-    
 
     res
       .status(200)
