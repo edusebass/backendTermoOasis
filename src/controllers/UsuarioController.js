@@ -85,15 +85,7 @@ const nuevaContraseña = async (req,res)=>{
 }
 
 const obtenerPacientes = async (req, res) => {
-    // const { user } = req;
-  
     try {
-    //   const pacientes = await UsuarioModelo.find({ isPaciente: true }).populate({
-    //     path: "dates",
-    //     populate: {
-    //       path: "record",
-    //     },
-    //   });
       const pacientes = await UsuarioModelo.find({ isPaciente: true })
 
       res.status(200).json({ data: pacientes, status: true });
@@ -111,21 +103,31 @@ const perfil =(req,res)=>{
     res.status(200).json(req.usuarioBDD)
 }
 
-const recuperarContraseñaMovil = async (req,res) => {
-    const {email} = req.body
-    if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
+const recuperarContraseñaMovil = async (req, res) => {
+    const { nombre, apellido } = req.body;
+
+    if (Object.values(req.body).includes("")) {
+        return res.status(404).json({ msg: "Lo sentimos, debes llenar todos los campos" });
+    }
+
     // Verifica si existe el usuario
-    const usuarioBDD = await Usuario.findOne({email})
-    if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
-    // si existe envia el email
-    const nuevaContraseña = generateRandomPassword()
-    await emailMailRecuperarContraseñaMovil(email, nuevaContraseña)
-    usuarioBDD.contraseña = await usuarioBDD.encrypContraseña(nuevaContraseña)
-    await usuarioBDD.save()
-    res.status(200).json({msg:"Se envio tu nueva contraseña a tu correo"}) 
+    const usuarioBDD = await Usuario.findOne({ nombre, apellido });
+
+    if (!usuarioBDD) {
+        return res.status(404).json({ msg: "Lo sentimos, el usuario no se encuentra registrado" });
+    }
+
+    const { email } = usuarioBDD;
+    
+    // si existe, envía el email
+    const nuevaContraseña = generateRandomPassword();
+
+    await emailMailRecuperarContraseñaMovil(email, nuevaContraseña);
+    usuarioBDD.contraseña = await usuarioBDD.encrypContraseña(nuevaContraseña);
+    await usuarioBDD.save();
+
+    res.status(200).json({ msg: "Se envió tu nueva contraseña a tu correo" });
 }
-
-
 
 
 export{
