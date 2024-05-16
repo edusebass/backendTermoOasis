@@ -11,11 +11,17 @@ import{
 const citaRouter = Router()
 
 citaRouter.post("/registrar", verificarAutenticacion, crearCita) 
+
+
 citaRouter.post("/cancelar/:id", verificarAutenticacion, cancelarCita) 
+
+
 citaRouter.get("/mostrar-todas", verificarAutenticacion, mostrarCitas) 
 citaRouter.get("/mostrar/:id", verificarAutenticacion, mostrarCitaID) 
+
 citaRouter.get("/mostrar-por-paciente/:id", verificarAutenticacion, mostrarCitasPorPaciente) 
-citaRouter.put("/actualizar/:id", editarCita);
+
+citaRouter.post("/actualizar/:id", editarCita);
 
 
 

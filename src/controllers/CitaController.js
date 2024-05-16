@@ -30,33 +30,6 @@ const crearCita = async (req, res) => {
         const error = new Error("Doctor no se encuentra registrado");
         return res.status(400).json({ msg: error.message, status: false });
       }
-      // //
-      // Verificar si las fechas están en el pasado
-      
-      
-      
-      
-      // Convertir las fechas de inicio y fin a objetos Date
-    //   const ahora = new Date();
-    //   const diaCita = new Date(dia)
-    //   const inicioCita = new Date(inicio)
-    //   const finCita = new Date(fin)
-
-    //   if (inicioCita < ahora) {
-    //     return res.status(400).json({ msg: "No puedes agendar una cita en el pasado" });
-    // }
-      // Verificar si el inicio y el fin están en el mismo día que el especificado en "day"
-      // if (
-      //     diaCita.getDate() !== inicioCita.getDate() ||
-      //     diaCita.getMonth() !== inicioCita.getMonth() ||
-      //     diaCita.getFullYear() !== inicioCita.getFullYear() ||
-      //     diaCita.getDate() !== finCita.getDate() ||
-      //     diaCita.getMonth() !== finCita.getMonth() ||
-      //     diaCita.getFullYear() !== finCita.getFullYear()
-      // ) {
-      //     return res.status(400).json({ msg: "El inicio y el fin de la cita deben estar en el mismo día que el dia de la cita" });
-      // }
-  
       //verifica la fecha de inicio a crear
       const inicioInput = new Date(req.body.start);
       console.log("inicioInput: ", inicioInput);
@@ -237,7 +210,7 @@ const mostrarCitaID = async (req, res) => {
   const { id } = req.params;
   try {
     // obtiene la cita por el id
-    const citaExist = await CitaModelo.findById(id);
+    const citaExist = await CitaModelo.findById(id).populate("idPaciente");
 
     // si no existe salta un error
     if (!citaExist) {
@@ -251,10 +224,8 @@ const mostrarCitaID = async (req, res) => {
 };
 
 const mostrarCitasPorPaciente = async (req, res) => {
-  // id del paciente
   const { id } = req.params;
   try {
-     // obtiene las citas para un paciente en esp
       const dates = await CitaModelo.find({
         idPaciente: new mongoose.Types.ObjectId(id),
       })
