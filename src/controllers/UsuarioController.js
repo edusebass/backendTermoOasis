@@ -87,9 +87,8 @@ const nuevaContraseña = async (req,res)=>{
 const obtenerPacientes = async (req, res) => {
     try {
       const pacientes = await UsuarioModelo.find({ isPaciente: true })
-
+      
       res.status(200).json({ data: pacientes, status: true });
-    //   console.log(pacientes);
     } catch (error) {
       res.status(400).json({ msg: error.message, status: false });
     }
@@ -129,6 +128,12 @@ const recuperarContraseñaMovil = async (req, res) => {
     res.status(200).json({ msg: "Se envió tu nueva contraseña al correo registrado del usuario" });
 }
 
+const detallePaciente = async(req, res) => {
+    const { id } = req.params
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos no existe el paciente ${id}`});
+    const paciente = await Usuario.findById(id).select("-createdAt -updatedAt -__v")
+    res.status(200).json({paciente})
+}
 
 export{
     login,
@@ -138,5 +143,6 @@ export{
     obtenerPacientes,
     perfil,
     comprobarTokenContraseña,
-    recuperarContraseñaMovil
+    recuperarContraseñaMovil,
+    detallePaciente
 }

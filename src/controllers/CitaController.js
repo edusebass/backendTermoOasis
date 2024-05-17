@@ -4,14 +4,11 @@ import UsuarioModelo from "../models/Usuario.js";
 import { emailActualizarCita, emailCancelarCita, enviarEmailCita} from "../config/nodemailer.js";
 
 const crearCita = async (req, res) => {
-    // se obtiene los datos del body 
     const { idPaciente, idDoctor, start, end, comentarios } = req.body;
 
-    // verifica si estan llenos todos los campos
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 
     try {
-      //verifica si el paciente y el doctor existen 
       const existePaciente = await UsuarioModelo.find({
         _id: idPaciente,
         isPatient: true,
@@ -30,11 +27,9 @@ const crearCita = async (req, res) => {
         const error = new Error("Doctor no se encuentra registrado");
         return res.status(400).json({ msg: error.message, status: false });
       }
-      //verifica la fecha de inicio a crear
       const inicioInput = new Date(req.body.start);
       console.log("inicioInput: ", inicioInput);
       
-      // Verificar si ya existe una cita con la misma hora de inicio
       const existingCita = await CitaModelo.findOne({
         start: inicioInput.toISOString(),
       });
