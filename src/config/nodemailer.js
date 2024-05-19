@@ -105,7 +105,7 @@ const emailActualizarCita = async (datos) => {
     const { email, doctorEmail, cita } = datos;
     console.log("Nodemailer email para enviar: " + email);
    
-    const parsedDate = new Date(cita.inicio)
+    const parsedDate = new Date(cita.start)
     const humanDate = parsedDate.toDateString()
 
     let info = await transporter.sendMail({
