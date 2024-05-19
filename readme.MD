@@ -130,9 +130,8 @@ http://localhost:3000/api/citas/registrar
 ```
 BODY
 {
-  "dia": "2024-06-05T00:00:00",
-  "inicio": "2024-06-05T07:00:00",
-  "fin": "2024-06-05T13:00:00",
+  "start": "2024-06-05T07:00:00",
+  "end": "2024-06-05T13:00:00",
   "idPaciente": "660f0a7a1e74f02e637b968c",
   "idDoctor": "66020ed34753bbd7a76a8d7f"
 }
@@ -156,7 +155,7 @@ Ejemplo:
 
 | Parameter | Type            | Description                 |
 | :-------- | :-------------- | :-------------------------- |
-| `id`      | `id de mongodb` | **Required**. id de la cita |
+| `id`      | `id de mongodb` | **Required**: id de la cita |
 
 ```
 No se necesita BODY en este caso
@@ -187,9 +186,8 @@ Ejemplo:
 ```
 BODY
 {
-  "dia": "2025-04-08T05:00:00.000+00:00",
-  "inicio": "2025-04-08T05:00:00.000+00:00",
-  "fin": "2025-04-08T06:00:00.000+00:00",
+  "start": "2025-04-08T05:00:00.000+00:00",
+  "end": "2025-04-08T06:00:00.000+00:00",
   "comentarios": "nuevo valor de comentarios"
 
 }
@@ -222,8 +220,8 @@ Ejemplo de lo que devuelve
   "data": [
     {
       "_id": "66115d3b625d5750c3ad0dfe",
-      "dia": "2024-04-19T05:00:00.000Z",
-      "inicio": "2024-04-19T12:00:00.000Z",
+      "start": "2024-04-19T05:00:00.000Z",
+      "end": "2024-04-19T12:00:00.000Z",
       "fin": "2024-04-19T18:00:00.000Z",
       "registroMedico": [],
       "isCancelado": false,
@@ -288,9 +286,8 @@ Ejemplo de lo que devuelve
   {
     "data": {
         "_id": "66115d3b625d5750c3ad0dfe",
-        "dia": "2024-04-19T05:00:00.000Z",
-        "inicio": "2024-04-19T12:00:00.000Z",
-        "fin": "2024-04-19T18:00:00.000Z",
+        "start": "2024-04-19T12:00:00.000Z",
+        "end": "2024-04-19T18:00:00.000Z",
         "registroMedico": idregistroMedico,
         "isCancelado": false,
         "idPaciente": "660f0a7a1e74f02e637b968c",
@@ -327,9 +324,8 @@ Ejemplo de lo que devuelve
 "data": [
     {
       "_id": "66116ddb3281bdbdd6d0695c",
-      "dia": "2024-04-20T05:00:00.000Z",
-      "inicio": "2024-04-20T12:00:00.000Z",
-      "fin": "2024-04-20T18:00:00.000Z",
+      "start": "2024-04-20T12:00:00.000Z",
+      "end": "2024-04-20T18:00:00.000Z",
       "comentarios": "Revisión de rutina",
       "receta": "Paracetamol",
       "isCancelado": false,
