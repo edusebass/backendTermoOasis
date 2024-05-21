@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer"
 import dotenv from 'dotenv'
+import { formatoEmailCreacionCita, formatoEmailRecuperarContraseña, formatoEmailRecuperarContraseñaMovil } from "../utils/formatosEmail.js";
 dotenv.config()
 
 let transporter = nodemailer.createTransport({
@@ -12,65 +13,36 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-// send mail with defined transport object
 const emailMailRecuperarContraseña = async (userMail, token) =>{
     let info = await transporter.sendMail({
-    from: process.env.USER_MAILTRAP,
-    to: userMail,
-    subject: "Correo para reestablecer tu contraseña",
-    html: `
-    <h1>TERMO OASIS</h1>
-    <hr>
-    
-    <a href=${process.env.URL_FRONTEND}restablecerPass/${token}/>
-    <hr>
-    Ese seria el endpoint que devolveria al correo y que se deberia utilizar 
-    <footer>Manos que curan con amor</footer>
-    `
+        from: process.env.USER_MAILTRAP,
+        to: userMail,
+        subject: "Correo para reestablecer tu contraseña",
+        html: formatoEmailRecuperarContraseña(token)
     });
-    // url_frontend/api/nueva-password   esto para cuando este el frontend
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
 }
 
 const emailMailRecuperarContraseñaMovil = async (userMail, contraseña) =>{
     let info = await transporter.sendMail({
-    from: process.env.USER_MAILTRAP,
-    to: userMail,
-    subject: "Correo para reestablecer tu contraseña",
-    html: `
-    <h1>TERMO OASIS</h1>
-    <hr>
-        <p>Esta es tu nueva contraseña:<p/>
-    <hr>
-    <hr>
-        <p>${contraseña}<p/>
-    <hr>
-    Ese seria el endpoint que devolveria al correo y que se deberia utilizar 
-    <footer>Manos que curan con amor</footer>
-    `
+        from: process.env.USER_MAILTRAP,
+        to: userMail,
+        subject: "Correo para reestablecer tu contraseña",
+        html: formatoEmailRecuperarContraseñaMovil(contraseña)
     });
-    // url_frontend/api/nueva-password   esto para cuando este el frontend
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
 }
 
 const enviarEmailCita = async (datos) => {
     const { nombrePaciente, email, especialistemail, cita } = datos;
-    console.log("email para enviar: " + email);
   
     let info = await transporter.sendMail({
-      //the client email
-      to: [`${email}`, `${especialistemail}`],
-      //sendGrid sender id
-      from: "drbariatrico250@gmail.com",
-      subject: `Saludos ${nombrePaciente} ¡Te han asignado una fecha para una cita!`,
-      text: "Notificación de cita",
-      html: `<p> Te han asignado una fecha el ${cita.inicio} </p>
-            <p> Recuerda asistir puntualmente</p>
-            <p> Además, recuerda que solo puedes cancelar tucita hasta 1 hora antes</p>
-            <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
-            `,
+        to: [`${email}`, `${especialistemail}`],
+        from: "drbariatrico250@gmail.com",
+        subject: `Saludos ${nombrePaciente} ¡Te han asignado una fecha para una cita!`,
+        text: "Notificación de cita",
+        html: formatoEmailCreacionCita(cita)
     })
-    
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
   };
 
