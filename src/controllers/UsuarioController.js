@@ -11,7 +11,7 @@ const login = async(req,res)=>{
     const usuarioBDD = await Usuario.findOne({email}).select("-__v -token -updatedAt -createdAt")
     if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
     const verificarcontraseña = await usuarioBDD.matchContraseña(contraseña)
-    if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, el contraseña no es el correcto"})
+    if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, la contraseña no es la correcta"})
     const token = generarJWT(usuarioBDD._id,"usuario")
     const {nombre,apellido, _id, isPaciente, isDoctor, isSecre} = usuarioBDD
     res.status(200).json({
