@@ -413,17 +413,6 @@ BODY
       "descripcion": "Mantener reposo absoluto"
     }
   ],
-  "generalInfo": {
-    "fechaNacimiento": "1990-05-15",
-    "lugarNacimiento": "Ciudad de México",
-    "cedula": "123456789",
-    "estadoCivil": "Soltero",
-    "ocupacion": "Estudiante"
-  },
-  "contactInfo": {
-    "direccion": "Calle Principal #123",
-    "telefono": 5551234567
-  },
   "informacionMedica": {
     "altura": 170,
     "peso": 70
@@ -443,17 +432,6 @@ Ejemplo de lo que devuelve
   "msg": "Registro Medico creado Correctamente",
   "status": true,
   "data": {
-    "generalInfo": {
-      "fechaNacimiento": "1990-05-15T00:00:00.000Z",
-      "lugarNacimiento": "Ciudad de México",
-      "cedula": "123456789",
-      "estadoCivil": "Soltero",
-      "ocupacion": "Estudiante"
-    },
-    "contactInfo": {
-      "direccion": "Calle Principal #123",
-      "telefono": 5551234567
-    },
     "informacionMedica": {
       "altura": 170,
       "peso": 70
