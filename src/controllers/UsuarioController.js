@@ -60,7 +60,6 @@ const recuperarContraseña = async(req,res)=>{
         msg:"Revisa tu correo electrónico para restablecer tu contraseña",
         tokenContraseña: usuarioBDD.token
     })
-    
 }
 
 const comprobarTokenContraseña = async (req,res)=>{
@@ -103,14 +102,14 @@ const perfil =(req,res)=>{
 }
 
 const recuperarContraseñaMovil = async (req, res) => {
-    const { nombre, apellido } = req.body;
+    const { nombre, apellido, cedula } = req.body;
 
     if (Object.values(req.body).includes("")) {
         return res.status(404).json({ msg: "Lo sentimos, debes llenar todos los campos" });
     }
 
     // Verifica si existe el usuario
-    const usuarioBDD = await Usuario.findOne({ nombre, apellido });
+    const usuarioBDD = await Usuario.findOne({ nombre, apellido, cedula });
 
     if (!usuarioBDD) {
         return res.status(404).json({ msg: "Lo sentimos, el usuario no se encuentra registrado" });

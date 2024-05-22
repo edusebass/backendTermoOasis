@@ -23,6 +23,10 @@ const UsuarioSchema = mongoose.Schema(
       trim: true,
       unique: true,
     },
+    cedula : {
+      type: String,
+      trim: true,
+    },
     isDoctor: {
       type: Boolean,
       trim: true,
@@ -37,6 +41,26 @@ const UsuarioSchema = mongoose.Schema(
       type: Boolean,
       trim: true,
       default: false,
+    },
+    fechaNacimiento: {
+      type: Date,
+      trim: true,
+    },
+    lugarNacimiento: {
+      type: String,
+      trim: true,
+    },
+    estadoCivil: {
+      type: String,
+      trim: true,
+    },
+    direccion: {
+      type: String,
+      trim: true,
+    },
+    telefono: {
+      type: Number,
+      trim: true,
     },
     citas: [
       {
