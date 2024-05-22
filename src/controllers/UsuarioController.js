@@ -102,20 +102,18 @@ const perfil =(req,res)=>{
 }
 
 const recuperarContraseñaMovil = async (req, res) => {
-    const { nombre, apellido, cedula } = req.body;
+    const { nombre, apellido, email } = req.body;
 
     if (Object.values(req.body).includes("")) {
         return res.status(404).json({ msg: "Lo sentimos, debes llenar todos los campos" });
     }
 
     // Verifica si existe el usuario
-    const usuarioBDD = await Usuario.findOne({ nombre, apellido, cedula });
+    const usuarioBDD = await Usuario.findOne({ nombre, apellido, email });
 
     if (!usuarioBDD) {
         return res.status(404).json({ msg: "Lo sentimos, el usuario no se encuentra registrado" });
     }
-
-    const { email } = usuarioBDD;
 
     // si existe, envía el email
     const nuevaContraseña = generateRandomPassword();
