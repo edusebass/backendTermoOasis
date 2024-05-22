@@ -10,6 +10,7 @@ import{
     comprobarTokenContraseña,
     recuperarContraseñaMovil,
     detallePaciente,
+    eliminarUsuario,
 } from "../controllers/UsuarioController.js";
 const usuarioRouter = Router()
 
@@ -23,10 +24,13 @@ usuarioRouter.post("/recuperar-password-movil", recuperarContraseñaMovil)
 
 
 
-usuarioRouter.get("/listar-pacientes", verificarAutenticacion, obtenerPacientes)
 usuarioRouter.get("/perfil", verificarAutenticacion, perfil)
 
 
+usuarioRouter.get("/listar-pacientes", verificarAutenticacion, obtenerPacientes)
 usuarioRouter.get("/detallePaciente/:id", verificarAutenticacion, detallePaciente)
 
+usuarioRouter.delete("/eliminarUsuario/:id", verificarAutenticacion, eliminarUsuario)
+
 export default usuarioRouter
+

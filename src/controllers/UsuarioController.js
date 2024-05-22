@@ -134,14 +134,28 @@ const detallePaciente = async(req, res) => {
     res.status(200).json({paciente})
 }
 
+const eliminarUsuario = async (req, res) => {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ msg: `Lo sentimos, no existe el usuario con ID ${id}` });
+    }
+    const usuarioEliminado = await Usuario.findByIdAndDelete(id);
+
+    if (!usuarioEliminado) {
+        return res.status(404).json({ msg: `Lo sentimos, no se pudo encontrar el usuario con ID ${id}` });
+    }
+    res.status(200).json({ msg: 'Usuario eliminado exitosamente', usuarioEliminado });
+};
+
 export{
     login,
     registro,
     recuperarContraseña,
     nuevaContraseña,
-    obtenerPacientes,
     perfil,
     comprobarTokenContraseña,
     recuperarContraseñaMovil,
-    detallePaciente
+    detallePaciente,
+    obtenerPacientes,
+    eliminarUsuario,
 }
