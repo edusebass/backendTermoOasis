@@ -7,7 +7,6 @@ const RegistroSchema = mongoose.Schema(
       ref: "Citas",
       required: true,
     },
-    
     idPaciente: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Usuarios",
@@ -58,38 +57,6 @@ const RegistroSchema = mongoose.Schema(
         },
       },
     ],
-    generalInfo: {
-      fechaNacimiento: {
-        type: Date,
-        trim: true,
-      },
-      lugarNacimiento: {
-        type: String,
-        trim: true,
-      },
-      cedula: {
-        type: String,
-        trim: true,
-      },
-      estadoCivil: {
-        type: String,
-        trim: true,
-      },
-      ocupacion: {
-        type: String,
-        trim: true,
-      }
-    },
-    contactInfo: {
-      direccion: {
-        type: String,
-        trim: true,
-      },
-      telefono: {
-        type: Number,
-        trim: true,
-      },
-    },
     informacionMedica: {
       altura: {
         type: Number,
