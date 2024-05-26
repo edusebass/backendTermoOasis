@@ -189,7 +189,10 @@ const mostrarCitaID = async (req, res) => {
   const { id } = req.params;
   try {
     // obtiene la cita por el id
-    const citaExist = await CitaModelo.findById(id).populate("idPaciente");
+    const citaExist = await CitaModelo.findById(id).populate("idPaciente").populate({
+      path: "idDoctor",
+      select: "nombre apellido"
+    });;
 
     // si no existe salta un error
     if (!citaExist) {
