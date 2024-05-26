@@ -51,8 +51,6 @@ const crearRegistro = async (req, res) => {
 };
 
 const obtenerRegistros = async (req, res) => {
-  // const { user } = req;
-
   try {
     const registro = await RegistroMedicoModelo.find();
 
@@ -77,8 +75,37 @@ const obtenerRegistroPaciente = async (req, res) => {
   }
 };
 
+const editarRegistro = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const registro = await RegistroMedicoModelo.findById(id);
+
+    if (!registro) {
+      const error = new Error("Registro no encontrado")
+      return res.status(401).json({ msg: error.message });
+    } else {
+      registro.receta.nombre = req.body.receta.nombre || registro.receta.nombre,
+      registro.receta.dosis = req.body.receta.dosis || registro.receta.dosis,
+      registro.receta.frecuencia 
+      registro.dieta.descripcion = req.body.receta.descripcion || registro.receta.descripcion,
+      registro.actividad.descripcion = req.body.actividad.descripcion || registro.actividad.descripcion,
+      registro.cuidados.descripcion = req.body.cuidados.descripcion || registro.cuidados.descripcion,
+      registro.informacionMedica.altura = req.body.informacionMedica.altura || registro.informacionMedica.altura,
+      registro.informacionMedica.peso = req.body.informacionMedica.peso || registro.informacionMedica.peso,
+      registro.comments = req.body.comments || registro.comments
+      registro.save()
+
+      res.status(200).json({ msg: registro, status: true });
+    }
+  } catch (error) {
+    res.status(404).json({ msg: error });
+  }
+
+}
+
 export {
     crearRegistro,
     obtenerRegistros,
-    obtenerRegistroPaciente
+    obtenerRegistroPaciente,
+    editarRegistro
 }
