@@ -398,21 +398,9 @@ BODY
       "frecuencia": "Cada 12 horas"
     }
   ],
-  "dieta": [
-    {
-      "descripcion": "Dieta baja en grasas"
-    }
-  ],
-  "actividad": [
-    {
-      "descripcion": "Realizar ejercicio moderado"
-    }
-  ],
-  "cuidados": [
-    {
-      "descripcion": "Mantener reposo absoluto"
-    }
-  ],
+  "dieta": "Dieta baja en grasas",
+  "actividad": "Realizar ejercicio moderado",
+  "cuidados": "Mantener reposo absoluto",
   "informacionMedica": {
     "altura": 170,
     "peso": 70
@@ -432,10 +420,7 @@ Ejemplo de lo que devuelve
   "msg": "Registro Medico creado Correctamente",
   "status": true,
   "data": {
-    "informacionMedica": {
-      "altura": 170,
-      "peso": 70
-    },
+
     "_id": "661593151fa56e74ed7a8a86",
     "idCita": {
       "_id": "66105b0c2f1e22b7c7c513f6",
@@ -511,24 +496,13 @@ Ejemplo de lo que devuelve
         "_id": "661593151fa56e74ed7a8a88"
       }
     ],
-    "dieta": [
-      {
-        "descripcion": "Dieta baja en grasas",
-        "_id": "661593151fa56e74ed7a8a89"
-      }
-    ],
-    "actividad": [
-      {
-        "descripcion": "Realizar ejercicio moderado",
-        "_id": "661593151fa56e74ed7a8a8a"
-      }
-    ],
-    "cuidados": [
-      {
-        "descripcion": "Mantener reposo absoluto",
-        "_id": "661593151fa56e74ed7a8a8b"
-      }
-    ],
+    "dieta": "Dieta baja en grasas",
+    "actividad": "Realizar ejercicio moderado",
+    "cuidados": "descripcion": "Mantener reposo absoluto",
+     "informacionMedica": {
+      "altura": 170,
+      "peso": 70
+    },
     "comments": "Paciente presenta síntomas leves de gripe.",
     "createdAt": "2024-04-09T19:12:21.203Z",
     "updatedAt": "2024-04-09T19:12:21.203Z",
@@ -536,22 +510,6 @@ Ejemplo de lo que devuelve
   }
 }
 ```
-
-## Mostrar todos los registro medicos
-
-Este endpoint mostrara todos los regsitros medicos sin excepcion algunae
-
-GET
-
-http://localhost:3000/api/registroMedico/listar
-
-- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
-
-```
-NO SE NECESITA BODY EN ESTA CASO
-```
-
----
 
 ## Mostrar registros por paciente
 
@@ -588,14 +546,11 @@ npm run dev
 
 Asegúrate de configurar las siguientes variables de entorno antes de ejecutar la aplicación:
 
+```
 - `MONGODB_URI`: La URL de conexión a la base de datos MongoDB.
 - `HOST_MAILTRAP`=
 - `PORT_MAILTRAP`=
 - `USER_MAILTRAP`=
 - `PASS_MAILTRAP`=
-
-AÑADO ALGO
-
-```
 
 ```

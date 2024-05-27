@@ -33,30 +33,18 @@ const RegistroSchema = mongoose.Schema(
         },
       },
     ],
-    dieta: [
-      {
-        descripcion: {
-          type: String,
-          trim: true,
-        },
-      },
-    ],
-    actividad: [
-      {
-        descripcion: {
-          type: String,
-          trim: true,
-        },
-      },
-    ],
-    cuidados: [
-      {
-        descripcion: {
-          type: String,
-          trim: true,
-        },
-      },
-    ],
+    dieta: {
+      type: String,
+      trim: true,
+    },
+    actividad: {
+      type: String,
+      trim: true,
+    },
+    cuidados: {
+      type: String,
+      trim: true,
+    },
     informacionMedica: {
       altura: {
         type: Number,
