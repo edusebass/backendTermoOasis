@@ -54,11 +54,10 @@ const obtenerRegistroPaciente = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const registro = await RegistroMedicoModelo.findOne({ idPaciente: id });
+    const registroMedico = await RegistroMedicoModelo.findOne({ idCita: id });
 
-    // registro.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
 
-    res.status(200).json({ data: registro, status: true });
+    res.status(200).json({ data: registroMedico, status: true });
   } catch (error) {
     res.status(400).json({ msg: error.message, status: false });
   }
@@ -94,7 +93,6 @@ const editarRegistro = async (req, res) => {
 
 export {
     crearRegistro,
-    obtenerRegistros,
     obtenerRegistroPaciente,
     editarRegistro
 }
