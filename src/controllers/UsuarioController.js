@@ -8,7 +8,7 @@ import { generateRandomPassword } from "../helpers/genradorContraseña.js";
 const login = async(req,res)=>{
     const {email,contraseña} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
-    const usuarioBDD = await Usuario.findOne({email}).select("-__v -token -updatedAt -createdAt")
+    const usuarioBDD = await Usuario.findOne({email}).select("-__v -token -updatedAt -createdAt -citas -pacientes")
     if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
     const verificarcontraseña = await usuarioBDD.matchContraseña(contraseña)
     if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, la contraseña no es la correcta"})
@@ -16,12 +16,7 @@ const login = async(req,res)=>{
     const {nombre,apellido, _id, isPaciente, isDoctor, isSecre} = usuarioBDD
     res.status(200).json({
         token,
-        nombre,
-        apellido,
-        _id,
-        isDoctor,
-        isPaciente,
-        isSecre,
+        usuarioBDD,
         email:usuarioBDD.email
     })
 }
