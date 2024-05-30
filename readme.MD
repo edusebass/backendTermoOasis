@@ -13,30 +13,22 @@ http://localhost:3000/api/registro
 BODY
 para crear un doctor
     {
-        "nombre": "Eduardo",
-        "apellido": "Almachi",
-        "email": "edu03@sebas.com",
-        "contraseña": "123Edu.",
-        "isDoctor": true
-    }
+  "nombre": "David",
+  "apellido": "Ortiz",
+  "email": "edu@hotmail.com",
+  "contraseña": "123Edu.",
+  "isDoctor": false,
+  "isSecre": false,
+  "isPaciente": true,
+  "cedula": "12345678",
+  "fechaNacimiento": "1990-01-01",
+  "lugarNacimiento": "New York, USA",
+  "estadoCivil": "Soltero",
+  "direccion": "123 Main St",
+  "telefono": 1234567890
+}
 
-para crear una secretaria
-    {
-        "nombre": "Melany",
-        "apellido": "Sangucho",
-        "email": "edu03@alma.com",
-        "contraseña": "123Edu.",
-        "isSecre": true
-    }
-
-para crear un paciente
-    {
-        "nombre": "Melany",
-        "apellido": "Sangucho",
-        "email": "edu03@alma.com",
-        "contraseña": "123Edu.",
-        "isPaciente": true
-    }
+NOTA: SI QUIEREN CREAR UN PACIENTE O SECRETARIA PONEN TRUE Y A LOS DEMAS FALSE
 
 ```
 
@@ -58,11 +50,21 @@ para loguearse
     nota: este token sirve los endpoint que utilizan CRUD no para el cambio de contraseña el otro es diferente y se especifica abajo
 
     {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDIwZWQzNDc1M2JiZDdhNzZhOGQ3ZiIsInJvbCI6InVzdWFyaW8iLCJpYXQiOjE3MTE0MjQ1MzgsImV4cCI6MTcxMTUxMDkzOH0.r1fEotj0Qr23Txlg0wnFSvnVSZJMl4LBbBxTHZ5aPqU",
-        "nombre": "Eduardo",
-        "apellido": "Almachi",
-        "_id": "66020ed34753bbd7a76a8d7f",
-        "email": "edu03@sebas.com"
+       {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTdiNWRiMmNlMTg3YWY0NDc0MTZiMCIsInJvbCI6InVzdWFyaW8iLCJpYXQiOjE3MTcwNDAzMDAsImV4cCI6MTcxNzEyNjcwMH0.0KNNK0x2VNor0Ftsk5TvnHbZU41yR_wtG_A03jCZfRg",
+        "nombre": "David",
+        "apellido": "Ortiz",
+        "_id": "6657b5db2ce187af447416b0",
+        "isDoctor": false,
+        "isPaciente": true,
+        "isSecre": false,
+        "fechaNacimiento": "1990-01-01T00:00:00.000Z",
+        "lugarNacimiento": "New York, USA",
+        "estadoCivil": "Soltero",
+        "direccion": "123 Main St",
+        "telefono": 1234567890,
+        "email": "edu@hotmail.com"
+      }
     }
 ```
 
