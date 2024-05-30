@@ -510,7 +510,7 @@ Ejemplo de lo que devuelve
     "updatedAt": "2024-04-09T19:12:21.203Z",
     "__v": 0
   }
-}
+
 ```
 
 ## Mostrar registros por paciente
@@ -537,6 +537,44 @@ BODY
 **Consideraciones:No se podra cancelar la cita si:**
 
 - el id no es el correcto
+
+## Editar registro medico
+
+| Parameter | Type            | Description                         |
+| :-------- | :-------------- | :---------------------------------- |
+| `id`      | `id de mongodb` | **Required**. id del RegistroMedico |
+
+```
+
+BODY
+
+{
+  "receta": [
+    {
+      "nombre": "Ibuprofeno 400mg",
+      "dosis": "1 comprimido",
+      "frecuencia": "Cada 8 horas"
+    },
+    {
+      "nombre": "Amoxicilina 500mg",
+      "dosis": "1 comprimido",
+      "frecuencia": "Cada 12 horas"
+    }
+  ],
+  "dieta": "Dieta baja en grasas",
+  "actividad": "Realizar ejercicio moderado",
+  "cuidados": "Mantener reposo absoluto",
+  "informacionMedica": {
+    "altura": 17670,
+    "peso": 70
+  },
+  "comments": "gripe."
+}
+
+
+```
+
+- #### Hay que propocionar el token en bearer que conseguimos cuando nos logueamos
 
 ## Configuración
 

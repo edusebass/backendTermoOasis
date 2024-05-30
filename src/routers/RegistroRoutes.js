@@ -5,8 +5,7 @@ import { crearRegistro, obtenerRegistroPaciente, editarRegistro } from '../contr
 const registroRouter = Router()
 
 registroRouter.post("/crear", verificarAutenticacion, crearRegistro)
-registroRouter.put("/editar", verificarAutenticacion, editarRegistro)
-
+registroRouter.put("/editar/:id", verificarAutenticacion, editarRegistro)
 registroRouter.get("/:id", verificarAutenticacion, obtenerRegistroPaciente )
 
 export default registroRouter

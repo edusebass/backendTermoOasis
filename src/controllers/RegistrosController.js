@@ -74,16 +74,16 @@ const editarRegistro = async (req, res) => {
     } else {
       registro.receta.nombre = req.body.receta.nombre || registro.receta.nombre,
       registro.receta.dosis = req.body.receta.dosis || registro.receta.dosis,
-      registro.receta.frecuencia 
-      registro.dieta.descripcion = req.body.receta.descripcion || registro.receta.descripcion,
-      registro.actividad.descripcion = req.body.actividad.descripcion || registro.actividad.descripcion,
-      registro.cuidados.descripcion = req.body.cuidados.descripcion || registro.cuidados.descripcion,
+      registro.receta.frecuencia = req.body.receta.frecuencia || registro.receta.frecuencia,
+      registro.dieta = req.body.dieta || registro.receta,
+      registro.actividad = req.body.actividad || registro.actividad,
+      registro.cuidados = req.body.cuidados || registro.cuidados,
       registro.informacionMedica.altura = req.body.informacionMedica.altura || registro.informacionMedica.altura,
       registro.informacionMedica.peso = req.body.informacionMedica.peso || registro.informacionMedica.peso,
       registro.comments = req.body.comments || registro.comments
       registro.save()
 
-      res.status(200).json({ msg: registro, status: true });
+      res.status(200).json({ msg: "Registro medico actualizado", status: true });
     }
   } catch (error) {
     res.status(404).json({ msg: error });
