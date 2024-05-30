@@ -122,6 +122,7 @@ const editarCita = async (req, res) => {
       const error = new Error("Cita no encontrada");
       return res.status(401).json({ msg: error.message });
     } else if (cita){
+      const citaAnterior = cita.start 
       cita.start = req.body.start || cita.start;
       cita.end = req.body.end || cita.end;
       cita.comentarios = req.body.comentarios || cita.comentarios;
@@ -148,6 +149,7 @@ const editarCita = async (req, res) => {
       }
 
       emailActualizarCita({
+        fechaAnterior: citaAnterior,
         firstname: existPaciente[0].nombre,
         email: existPaciente[0].email,
         especialistemail: existDoctor[0].email,

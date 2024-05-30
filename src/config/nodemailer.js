@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import dotenv from 'dotenv'
-import { formatoEmailCreacionCita, formatoEmailRecuperarContraseña, formatoEmailRecuperarContraseñaMovil } from "../utils/formatosEmail.js";
+import { formatoEmailActualizacionCita, formatoEmailCancelacionCita, formatoEmailCreacionCita, formatoEmailRecuperarContraseña, formatoEmailRecuperarContraseñaMovil } from "../utils/formatosEmail.js";
 dotenv.config()
 
 let transporter = nodemailer.createTransport({
@@ -38,7 +38,7 @@ const enviarEmailCita = async (datos) => {
   
     let info = await transporter.sendMail({
         to: [`${email}`, `${especialistemail}`],
-        from: "drbariatrico250@gmail.com",
+        from: "edu03sebas@gmail.com",
         subject: `Saludos ${nombrePaciente} ¡Te han asignado una fecha para una cita!`,
         text: "Notificación de cita",
         html: formatoEmailCreacionCita(cita)
@@ -47,55 +47,30 @@ const enviarEmailCita = async (datos) => {
   };
 
 const emailCancelarCita = async (datos) => {
-    // obtiene los datos del controller
     const { email, doctorEmail, cita } = datos;
-    console.log("Nodemailer email para enviar: " + email);
-   
-    const parsedDate = new Date(cita.inicio)
-    const humanDate = parsedDate.toDateString()
 
     let info = await transporter.sendMail({
-    //the client email
     to: [`${email}`, `${doctorEmail}`],
-    //sendGrid sender id
-    from: "drbariatrico250@gmail.com",
+    from: "edu03sebas@gmail.com",
     subject: "Tu cita ha sido cancelada",
-    text: "Notificación de cita",
-    html: `<p>Tu cita del ${humanDate} ha sido cancelada</p>
-    <p>Para poder ingresar al sistema debes hacerlo mediante tus credenciales de seguridad </p>
-    <p> Puedes ingresar al sistema mediante el siguiente enlace </p>
-    <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
-    `,
+    text: "Cancelacion de cita",
+    html: formatoEmailCancelacionCita(cita)
     });
-
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
-    
 };
 
 const emailActualizarCita = async (datos) => {
-    // obtiene los datos del controller
-    const { email, doctorEmail, cita } = datos;
-    console.log("Nodemailer email para enviar: " + email);
-   
-    const parsedDate = new Date(cita.start)
-    const humanDate = parsedDate.toDateString()
+    const { email, doctorEmail, cita, fechaAnterior } = datos;
 
     let info = await transporter.sendMail({
-    //the client email
     to: [`${email}`, `${doctorEmail}`],
-    //sendGrid sender id
-    from: "drbariatrico250@gmail.com",
+    from: "edu03sebas@gmail.com",
     subject: "Tu cita ha sido actualizada",
-    text: "Notificación de cita",
-    html: `<p>Tu cita del ${humanDate} ha sido actualizada</p>
-    <p>Para poder ingresar al sistema debes hacerlo mediante tus credenciales de seguridad</p>
-    <p>Se actualizo tu cita para ${parsedDate} </p>
-    <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
-    `,
+    text: "Actualizacion de cita",
+    html: formatoEmailActualizacionCita(cita, fechaAnterior)
     });
 
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
-    
 };
 
 export {
