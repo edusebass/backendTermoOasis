@@ -66,30 +66,37 @@ const obtenerRegistroPaciente = async (req, res) => {
 const editarRegistro = async (req, res) => {
   const { id } = req.params;
   try {
+    // Buscar el registro médico por su ID
     const registro = await RegistroMedicoModelo.findById(id);
 
     if (!registro) {
-      const error = new Error("Registro no encontrado")
-      return res.status(401).json({ msg: error.message });
-    } else {
-      registro.receta.nombre = req.body.receta.nombre || registro.receta.nombre,
-      registro.receta.dosis = req.body.receta.dosis || registro.receta.dosis,
-      registro.receta.frecuencia = req.body.receta.frecuencia || registro.receta.frecuencia,
-      registro.dieta = req.body.dieta || registro.receta,
-      registro.actividad = req.body.actividad || registro.actividad,
-      registro.cuidados = req.body.cuidados || registro.cuidados,
-      registro.informacionMedica.altura = req.body.informacionMedica.altura || registro.informacionMedica.altura,
-      registro.informacionMedica.peso = req.body.informacionMedica.peso || registro.informacionMedica.peso,
-      registro.comments = req.body.comments || registro.comments
-      registro.save()
-
-      res.status(200).json({ msg: "Registro medico actualizado", status: true });
+      // Si no se encuentra el registro, devolver un error
+      return res.status(404).json({ msg: "Registro no encontrado" });
     }
-  } catch (error) {
-    res.status(404).json({ msg: error });
-  }
 
-}
+    // Actualizar la receta si se proporciona en req.body
+    if (req.body.receta) {
+      registro.receta = req.body.receta;
+    }
+
+    // Actualizar otros campos del registro si se proporcionan en req.body
+    registro.dieta = req.body.dieta || registro.dieta;
+    registro.actividad = req.body.actividad || registro.actividad;
+    registro.cuidados = req.body.cuidados || registro.cuidados;
+    registro.informacionMedica = req.body.informacionMedica || registro.informacionMedica;
+    registro.comments = req.body.comments || registro.comments;
+
+    // Guardar los cambios en la base de datos
+    await registro.save();
+
+    // Responder con un mensaje de éxito
+    res.status(200).json({ msg: "Registro médico actualizado", status: true });
+  } catch (error) {
+    // Manejar errores y responder con un mensaje de error
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 
 export {
     crearRegistro,
