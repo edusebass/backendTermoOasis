@@ -245,7 +245,7 @@ const verificarCitasProximas = async () => {
   }
 };
 
-// cron.schedule('*/10 * * * * *', verificarCitasProximas); // Ejecutar cada 30 segundos
+cron.schedule('*/60 * * * * *', verificarCitasProximas); // Ejecutar cada 30 segundos
 
 export {
   crearCita,
