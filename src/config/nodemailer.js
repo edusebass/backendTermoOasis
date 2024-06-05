@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import dotenv from 'dotenv'
-import { formatoEmailActualizacionCita, formatoEmailCancelacionCita, formatoEmailCreacionCita, formatoEmailRecuperarContraseña, formatoEmailRecuperarContraseñaMovil } from "../utils/formatosEmail.js";
+import { formatoEmailActualizacionCita, formatoEmailCancelacionCita, formatoEmailCreacionCita, formatoEmailRecordatorioCita, formatoEmailRecuperarContraseña, formatoEmailRecuperarContraseñaMovil } from "../utils/formatosEmail.js";
 dotenv.config()
 
 let transporter = nodemailer.createTransport({
@@ -73,10 +73,24 @@ const emailActualizarCita = async (datos) => {
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
 };
 
+const emailRecordatorioCita = async (email, fecha) => {
+
+    let info = await transporter.sendMail({
+    to: [`${email}`],
+    from: "edu03sebas@gmail.com",
+    subject: "Recordatorio de cita",
+    text: "Recordatorio de cita",
+    html: formatoEmailRecordatorioCita(fecha)
+    });
+
+    console.log("Mensaje de recordatorio enviado satisfactoriamente: ", info.messageId);
+};
+
 export {
     emailMailRecuperarContraseña,
     emailActualizarCita,
     enviarEmailCita,
     emailCancelarCita,
-    emailMailRecuperarContraseñaMovil
+    emailMailRecuperarContraseñaMovil,
+    emailRecordatorioCita
 }

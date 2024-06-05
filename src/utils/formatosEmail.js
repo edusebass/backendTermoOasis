@@ -340,3 +340,71 @@ export const formatoEmailActualizacionCita = (cita, fechaAnterior) => {
         </html>
     `)
 }
+
+export const formatoEmailRecordatorioCita = (fecha) => {
+    const formattedDate = format(new Date(fecha), "EEEE, d 'de' MMMM 'de' yyyy 'a las' hh:mm a", { locale: es });
+    // console.log("fecha: " +  formattedDate)
+    return (`
+        <head>
+            <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #000000;
+            }
+            .container {
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                background-color: #B7D5CF;
+            }
+            .header {
+                background-color: #5D9896;
+                padding: 20px;
+                text-align: center;
+                border-bottom: 1px solid #267373;
+                color: white;
+            }
+            .header h1 {
+                margin: 0;
+            }
+            .content {
+                padding: 20px;
+            }
+            .footer {
+                background-color: #5D9896;
+                padding: 10px;
+                text-align: center;
+                border-top: 1px solid #267373;
+                color: white;
+            }
+            a {
+                color: #F27F1B;
+            }
+        </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Recordatorio de cita</h1>
+                </div>
+                <div class="content">
+                    <p>Saludos,</p>
+                    <p> Le recordamos que tiene una cita dentro de 12 horas, exactamente para el: ${formattedDate}</p>
+                    <hr>
+                    <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
+                    <hr>
+                </div>
+                <div class="footer">
+                    <p>&copy; 2024 TERMO OASIS. Todos los derechos reservados.</p>
+                    <hr>
+                    <footer>Manos que curan con amor</footer>
+                </div>
+            </div>
+        </body>
+        </html>
+    `)
+}

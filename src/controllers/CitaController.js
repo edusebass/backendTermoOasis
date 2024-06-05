@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import CitaModelo from "../models/Citas.js";
 import UsuarioModelo from "../models/Usuario.js";
-import { emailActualizarCita, emailCancelarCita, enviarEmailCita} from "../config/nodemailer.js";
+import { emailActualizarCita, emailCancelarCita, emailRecordatorioCita, enviarEmailCita} from "../config/nodemailer.js";
+import cron from 'node-cron';
 
 const crearCita = async (req, res) => {
   const { idPaciente, idDoctor, start, end, comentarios } = req.body;
@@ -26,17 +27,27 @@ const crearCita = async (req, res) => {
       return res.status(400).json({ msg: error.message, status: false });
     }
 
-    const inicioInput = new Date(req.body.start);    
+    const startISO = req.body.start; 
+
+    let inicioInput = new Date(startISO);
+
+    inicioInput.setHours(inicioInput.getHours() - 5);
+
+    const inicioDesde = new Date(inicioInput);
+    inicioDesde.setMinutes(inicioDesde.getMinutes() - 1);
+
+    const inicioHasta = new Date(inicioInput);
+    inicioHasta.setMinutes(inicioHasta.getMinutes() + 1);
+
     const existingCita = await CitaModelo.findOne({
-      start: inicioInput.toISOString(),
+      start: {
+        $gte: inicioDesde.toISOString(),
+        $lte: inicioHasta.toISOString()
+      }
     });
 
     if (existingCita) {
-      if (existingCita.idPaciente !== existePaciente[0]._id || existingCita.idDoctor === idDoctor) {
-        res
-          .status(400)
-          .json({ msg: "Ya existe una cita en ese horario!", status: false });
-      }
+      return res.status(400).json({ msg: "Ya existe una cita en ese horario!", status: false });
     } else {
       const cita = new CitaModelo({
         idPaciente,
@@ -91,7 +102,9 @@ const cancelarCita = async (req, res) => {
     }
 
     const ahora = new Date();
-    const inicioCita = new Date(cita.inicio);
+    const inicioCita = new Date(cita.start);
+
+    console.log(inicioCita)
 
     const diferenciaTiempo = inicioCita.getTime() - ahora.getTime();
 
@@ -99,15 +112,15 @@ const cancelarCita = async (req, res) => {
       return res.status(400).json({ msg: "No puedes cancelar la cita con menos de 24 horas de antelación" });
     }
 
-    emailCancelarCita({
-      email: cita.idPaciente.email,
-      doctorEmail: cita.idDoctor.email,
-      cita,
-    });
+    // emailCancelarCita({
+    //   email: cita.idPaciente.email,
+    //   doctorEmail: cita.idDoctor.email,
+    //   cita,
+    // });
     
-    await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
+    // await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
     
-    res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
+    // res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
   } catch (error) {
     res.status(400).json({ msg: error.message, status: false });
   }
@@ -167,15 +180,7 @@ const editarCita = async (req, res) => {
 };
 
 const mostrarCitas = async (req, res) => {
-  // const { user } = req;
-
-  // if (!user.isDoctor) {
-  //   const error = new Error("Usuario no autorizado para esta accion");
-  //   return res.status(400).json({ msg: error.message, status: false });
-  // }
-
   try {
-    // obtiene la cita
     const citas = await CitaModelo.find().populate("idPaciente")
 
     // ordena el orden de muestra de la cita
@@ -220,6 +225,27 @@ const mostrarCitasPorPaciente = async (req, res) => {
     res.status(400).json({ msg: error.message, status: false });
   }
 };
+
+const verificarCitasProximas = async () => {
+  const ahora = new Date();
+  const doceHorasAntes = new Date(ahora.getTime() - 12 * 60 * 60 * 1000);
+
+  try {
+    const citasProximas = await CitaModelo.find({
+      start: { $gte: doceHorasAntes.toISOString(), $lte: ahora.toISOString() },
+    }).populate('idPaciente');
+
+    for (const cita of citasProximas) {
+      await emailRecordatorioCita(cita.idPaciente.email, cita.start);
+    }
+
+    console.log("aqui")
+  } catch (error) {
+    console.error('Error al verificar las citas próximas:', error);
+  }
+};
+
+// cron.schedule('*/10 * * * * *', verificarCitasProximas); // Ejecutar cada 30 segundos
 
 export {
   crearCita,
