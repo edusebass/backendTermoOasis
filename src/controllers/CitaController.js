@@ -112,15 +112,15 @@ const cancelarCita = async (req, res) => {
       return res.status(400).json({ msg: "No puedes cancelar la cita con menos de 24 horas de antelación" });
     }
 
-    // emailCancelarCita({
-    //   email: cita.idPaciente.email,
-    //   doctorEmail: cita.idDoctor.email,
-    //   cita,
-    // });
+    emailCancelarCita({
+      email: cita.idPaciente.email,
+      doctorEmail: cita.idDoctor.email,
+      cita,
+    });
     
-    // await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
+    await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
     
-    // res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
+    res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
   } catch (error) {
     res.status(400).json({ msg: error.message, status: false });
   }
