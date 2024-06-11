@@ -34,6 +34,10 @@ const DateSchema = mongoose.Schema(
       ref: "Usuarios",
       required: true,
     },
+    recordatory: {
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,

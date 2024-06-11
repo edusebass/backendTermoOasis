@@ -233,19 +233,25 @@ const verificarCitasProximas = async () => {
   try {
     const citasProximas = await CitaModelo.find({
       start: { $gte: doceHorasAntes.toISOString(), $lte: ahora.toISOString() },
+      recordatory: false // Filtrar solo las citas donde recordatory sea false
     }).populate('idPaciente');
 
     for (const cita of citasProximas) {
       await emailRecordatorioCita(cita.idPaciente.email, cita.start);
+
+      // Actualizar el campo recordatory a true después de enviar el mensaje
+      cita.recordatory = true;
+      await cita.save();
     }
 
-    console.log("aqui")
+    console.log("aqui");
   } catch (error) {
     console.error('Error al verificar las citas próximas:', error);
   }
 };
 
 cron.schedule('*/60 * * * * *', verificarCitasProximas); // Ejecutar cada 30 segundos
+
 
 export {
   crearCita,
