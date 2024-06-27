@@ -5,7 +5,12 @@ import { emailActualizarCita, emailCancelarCita, emailRecordatorioCita, enviarEm
 import cron from 'node-cron';
 
 const crearCita = async (req, res) => {
-  const { idPaciente, idDoctor, start, end, comentarios, isSecre } = req.body;
+  const { idPaciente, idDoctor, start, end, comentarios } = req.body;
+
+  const { isSecre } = req.headers
+  if (!isSecre ) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
 
 
   console.log(isSecre)
@@ -201,7 +206,7 @@ const mostrarCitas = async (req, res) => {
 };
 
 const mostrarCitaID = async (req, res) => {
-  const { isSecre, isDoctor, isPaciente } = req.body
+  const { isSecre, isDoctor, isPaciente } = req.headers
   const { id } = req.params;
 
   if (!isSecre && !isDoctor && !isPaciente) {
@@ -265,7 +270,6 @@ const verificarCitasProximas = async () => {
 };
 
 cron.schedule('*/60 * * * * *', verificarCitasProximas); // Ejecutar cada 30 segundos
-
 
 export {
   crearCita,
