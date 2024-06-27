@@ -7,6 +7,15 @@ import cron from 'node-cron';
 const crearCita = async (req, res) => {
   const { idPaciente, idDoctor, start, end, comentarios } = req.body;
 
+  const { isSecre } = req.query;
+
+  console.log(isSecre)
+
+  // Verificar los permisos de acceso
+  if (!isSecre) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+
   if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 
   try {
