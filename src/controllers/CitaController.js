@@ -5,9 +5,9 @@ import { emailActualizarCita, emailCancelarCita, emailRecordatorioCita, enviarEm
 import cron from 'node-cron';
 
 const crearCita = async (req, res) => {
-  const { idPaciente, idDoctor, start, end, comentarios } = req.body;
+  isSecre 
+  const { idPaciente, idDoctor, start, end, comentarios, isSecre } = req.body;
 
-  const { isSecre } = req.query;
 
   console.log(isSecre)
 
