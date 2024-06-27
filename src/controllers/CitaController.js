@@ -5,7 +5,6 @@ import { emailActualizarCita, emailCancelarCita, emailRecordatorioCita, enviarEm
 import cron from 'node-cron';
 
 const crearCita = async (req, res) => {
-  isSecre 
   const { idPaciente, idDoctor, start, end, comentarios, isSecre } = req.body;
 
 
@@ -202,7 +201,13 @@ const mostrarCitas = async (req, res) => {
 };
 
 const mostrarCitaID = async (req, res) => {
+  const { isSecre, isDoctor, isPaciente } = req.body
   const { id } = req.params;
+
+  if (!isSecre && !isDoctor && !isPaciente) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+
   try {
     // obtiene la cita por el id
     const citaExist = await CitaModelo.findById(id).populate("idPaciente").populate({
