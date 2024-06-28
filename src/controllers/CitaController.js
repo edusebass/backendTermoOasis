@@ -7,11 +7,11 @@ import cron from 'node-cron';
 const crearCita = async (req, res) => {
   const { idPaciente, idDoctor, start, end, comentarios } = req.body;
 
-  const { isSecre } = req.headers
+  const isSecre = req.headers['issecre'] === 'true';
+
   if (!isSecre ) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
-
 
   console.log(isSecre)
 
@@ -193,6 +193,16 @@ const editarCita = async (req, res) => {
 };
 
 const mostrarCitas = async (req, res) => {
+  const isSecre = req.headers['issecre'] === 'true';
+  const isDoctor = req.headers['isdoctor'] === 'true';
+  const isPaciente = req.headers['ispaciente'] === 'true';
+
+  console.log(isSecre, isDoctor, isPaciente)
+  
+  if (!isSecre && !isDoctor && !isPaciente) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+  
   try {
     const citas = await CitaModelo.find().populate("idPaciente")
 
@@ -240,7 +250,7 @@ const mostrarCitasPorPaciente = async (req, res) => {
   const isSecre = req.headers['issecre'] === 'true';
   const isDoctor = req.headers['isdoctor'] === 'true';
   const isPaciente = req.headers['ispaciente'] === 'true';
-  
+
   const { id } = req.params;
 
   console.log(isSecre, isDoctor, isPaciente)
