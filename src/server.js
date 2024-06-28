@@ -1,40 +1,38 @@
 // Requerir los módulos
-import express from 'express'
-import dotenv from 'dotenv'
+import express from 'express';
+import dotenv from 'dotenv';
 import cors from 'cors';
-import usuarioRouter from './routers/UsuarioRoutes.js';
-import citasRouter from './routers/CitasRoutes.js';
-import registroRouter from './routers/RegistroRoutes.js';
+import usuarioRouter from './routes/UsuarioRoutes.js';
+import citasRouter from './routes/CitasRoutes.js';
+import registroRouter from './routes/RegistroRoutes.js';
 
+import swaggerUI from 'swagger-ui-express';
+import swaggerSpec from './utils/swagger.js'; 
 
 // Inicializaciones
-const app = express()
-dotenv.config()
+const app = express();
+dotenv.config();
 
 // Configuraciones 
-app.set('port',process.env.port || 3001)
-app.use(cors())
+app.set('port', process.env.PORT || 3001);
+app.use(cors());
 
 // Middlewares 
-app.use(express.json())
-
-
-// Variables globales
-
-
+app.use(express.json());
 // Rutas 
-app.get('/',(req,res)=>{
-    res.send("Server on")
-})
+app.get('/', (req, res) => {
+    res.send("Server on");
+});
 
-app.use('/api', usuarioRouter) //endpoints para usuarios
-app.use('/api/citas', citasRouter) //endpoints para citas
-app.use('/api/registroMedico', registroRouter) //endpoints para citas
+app.use('/api', usuarioRouter); // Endpoints para usuarios
+app.use('/api/citas', citasRouter); // Endpoints para citas
+app.use('/api/registroMedico', registroRouter); // Endpoints para registros médicos
 
-
+// Middleware de Swagger
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // Manejo de una ruta que no sea encontrada
-app.use((req,res)=>res.status(404).send("Endpoint no encontrado - 404"))
+app.use((req, res) => res.status(404).send("Endpoint no encontrado - 404"));
 
 // Exportar la instancia de express por medio de app
-export default  app
+export default app;

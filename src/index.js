@@ -7,5 +7,4 @@ connection()
 //Verificar si server esta activo
 app.listen(app.get('port'),()=>{
     console.log(`Server ok on http://localhost:${app.get('port')}`);
-    app.post("Backend funcionando....")
 })
