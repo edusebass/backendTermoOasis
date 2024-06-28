@@ -52,7 +52,12 @@ const crearRegistro = async (req, res) => {
 
 const obtenerRegistroPaciente = async (req, res) => {
   const { id } = req.params;
+  const isDoctor = req.headers['isdoctor'] === 'true';
 
+  if (!isDoctor) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+  
   try {
     const registroMedico = await RegistroMedicoModelo.findOne({ idCita: id });
 
