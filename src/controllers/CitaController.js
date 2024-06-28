@@ -212,6 +212,8 @@ const mostrarCitaID = async (req, res) => {
   const isDoctor = req.headers['isdoctor'] === 'true';
   const isPaciente = req.headers['ispaciente'] === 'true';
 
+  console.log(isSecre, isDoctor, isPaciente)
+  
   if (!isSecre && !isDoctor && !isPaciente) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
