@@ -237,7 +237,18 @@ const mostrarCitaID = async (req, res) => {
 };
 
 const mostrarCitasPorPaciente = async (req, res) => {
+  const isSecre = req.headers['issecre'] === 'true';
+  const isDoctor = req.headers['isdoctor'] === 'true';
+  const isPaciente = req.headers['ispaciente'] === 'true';
+  
   const { id } = req.params;
+
+  console.log(isSecre, isDoctor, isPaciente)
+  
+  if (!isSecre && !isDoctor && !isPaciente) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+  
   try {
       const dates = await CitaModelo.find({
         idPaciente: new mongoose.Types.ObjectId(id),
