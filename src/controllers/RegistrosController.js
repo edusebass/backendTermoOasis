@@ -53,8 +53,10 @@ const crearRegistro = async (req, res) => {
 const obtenerRegistroPaciente = async (req, res) => {
   const { id } = req.params;
   const isDoctor = req.headers['isdoctor'] === 'true';
+  const isSecre = req.headers['issecre'] === 'true';
 
-  if (!isDoctor) {
+
+  if (!isDoctor && !isSecre) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
   

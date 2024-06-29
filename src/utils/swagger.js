@@ -16,6 +16,20 @@ const swaggerOptions = {
             description: 'Documentation for your API endpoints',
         },
         servers: [{ url: 'http://localhost:3001', description: 'Development server' }],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
     },
 
     // Especifica cómo encontrar los endpoints en tus rutas
