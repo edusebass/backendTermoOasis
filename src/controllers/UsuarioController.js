@@ -3,7 +3,7 @@ import generarJWT from "../helpers/crearJWT.js"
 import mongoose from "mongoose";
 import { emailMailRecuperarContraseña, emailMailRecuperarContraseñaMovil } from "../config/nodemailer.js";
 import UsuarioModelo from "../models/Usuario.js";
-import { generateRandomPassword } from "../helpers/genradorContraseña.js";
+import { generateRandomPassword } from "../helpers/generadorContraseña.js";
 
 const login = async(req,res)=>{
     const {email,contraseña} = req.body
