@@ -30,7 +30,7 @@ app.use('/api/registroMedico', registroRouter); // Endpoints para registros méd
 const CSS_URL ="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 // Middleware de Swagger
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec, { customCssUrl: CSS_URL }));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // Manejo de una ruta que no sea encontrada
 app.use((req, res) => res.status(404).send("Endpoint no encontrado - 404"));
