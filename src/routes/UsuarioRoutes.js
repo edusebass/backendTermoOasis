@@ -394,6 +394,19 @@ usuarioRouter.get("/perfil", verificarAutenticacion, perfil)
  *     summary: Listar pacientes
  *     description: Obtiene la lista de todos los pacientes registrados en el sistema.
  *     tags: [Usuarios]
+ *     parameters:
+ *       - in: header
+ *         name: issecre
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Indica si el usuario es secretario
+ *       - name: isdoctor
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de doctor/a.
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -444,7 +457,7 @@ usuarioRouter.get("/perfil", verificarAutenticacion, perfil)
  *       401:
  *         description: No autorizado, el usuario debe iniciar sesión.
  *       403:
- *         description: Acceso prohibido, el token proporcionado no es válido o ha expirado.
+ *         description: Acceso denegado.
  *       400:
  *         description: Error al intentar obtener la lista de pacientes.
  */
@@ -466,6 +479,24 @@ usuarioRouter.get("/listar-pacientes", verificarAutenticacion, obtenerPacientes)
  *         schema:
  *           type: string
  *         description: ID del paciente a consultar.
+ *       - name: issecre
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de secretario/a.
+ *       - name: isdoctor
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de doctor/a.
+ *       - name: ispaciente
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de paciente.
  *     responses:
  *       200:
  *         description: Detalles del paciente obtenidos correctamente.
@@ -506,7 +537,7 @@ usuarioRouter.get("/listar-pacientes", verificarAutenticacion, obtenerPacientes)
  *       401:
  *         description: No autorizado, el usuario debe iniciar sesión.
  *       403:
- *         description: Acceso prohibido, el token proporcionado no es válido o ha expirado.
+ *         description: Acceso denegado.
  *       404:
  *         description: No se encontró ningún paciente con el ID proporcionado.
  *       400:
@@ -530,6 +561,12 @@ usuarioRouter.get("/detallePaciente/:id", verificarAutenticacion, detallePacient
  *         schema:
  *           type: string
  *         description: ID del usuario a eliminar.
+ *       - name: issecre
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de secretario/a.
  *     responses:
  *       200:
  *         description: Usuario eliminado correctamente.

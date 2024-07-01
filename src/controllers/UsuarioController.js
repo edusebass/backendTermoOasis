@@ -90,6 +90,13 @@ const nuevaContraseña = async (req,res)=>{
 }
 
 const obtenerPacientes = async (req, res) => {
+    const isSecre = req.headers['issecre'] === 'true';
+    const isDoctor = req.headers['isdoctor'] === 'true';
+
+    if (!isSecre && !isDoctor) {
+        return res.status(403).json({ msg: "Acceso denegado", status: false });
+    }
+  
     try {
       const pacientes = await UsuarioModelo.find({ isPaciente: true })
       
@@ -108,6 +115,7 @@ const perfil =(req,res)=>{
 }
 
 const recuperarContraseñaMovil = async (req, res) => {
+
     const { nombre, apellido, email } = req.body;
 
     if (Object.values(req.body).includes("")) {
@@ -132,6 +140,14 @@ const recuperarContraseñaMovil = async (req, res) => {
 }
 
 const detallePaciente = async(req, res) => {
+    const isSecre = req.headers['issecre'] === 'true';
+    const isDoctor = req.headers['isdoctor'] === 'true';
+    const isPaciente = req.headers['ispaciente'] === 'true';
+  
+    if (!isSecre && !isDoctor && !isPaciente) {
+      return res.status(403).json({ msg: "Acceso denegado", status: false });
+    }
+
     const { id } = req.params
     if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos no existe el paciente ${id}`});
     const paciente = await Usuario.findById(id).select("-createdAt -updatedAt -__v")
@@ -139,6 +155,12 @@ const detallePaciente = async(req, res) => {
 }
 
 const eliminarUsuario = async (req, res) => {
+    const isSecre = req.headers['issecre'] === 'true';
+  
+    if (!isSecre) {
+      return res.status(403).json({ msg: "Acceso denegado", status: false });
+    }
+    
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ msg: `Lo sentimos, no existe el usuario con ID ${id}` });
