@@ -1,10 +1,7 @@
-// swaggerConfig.js
-
 import swaggerJSDoc from 'swagger-jsdoc';
 import path from 'path';
-import { fileURLToPath } from 'url'; // Para convertir import.meta.url a una ruta de archivo
+import { fileURLToPath } from 'url'; 
 
-// Obtener el directorio actual (__dirname) en módulos ES
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const swaggerOptions = {
@@ -32,7 +29,6 @@ const swaggerOptions = {
         ],
     },
 
-    // Especifica cómo encontrar los endpoints en tus rutas
     apis: [`${path.join(__dirname, "../routes/*.js")}`],
 };
 
