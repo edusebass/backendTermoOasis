@@ -6,8 +6,6 @@ import { fileURLToPath } from 'url';
 
 // console.log("adfasdf" + __dirname)
 
-const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
-
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
@@ -16,7 +14,7 @@ const swaggerOptions = {
             version: '1.0.0',
             description: 'Documentacion para los endpoints',
         },
-        servers: [{ url: 'https://backend-termo-oasis.vercel.app/', description: 'Production server' }],
+        servers: [{ url: 'https://backend-termo-oasis.vercel.app', description: 'Production server' }],
         components: {
             securitySchemes: {
                 bearerAuth: {
@@ -34,13 +32,11 @@ const swaggerOptions = {
     },
 
     // apis: [`${path.join(__dirname, "../routes/*.js")}`],
-    apis: ["./src/routes/*.js"],
+    apis: ["./src/**/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-const options = {
-    customCss: '.swagger-ui .topbar { display: none }'
-}
 
 
-export default (swaggerSpec, options);
+
+export default swaggerSpec;
