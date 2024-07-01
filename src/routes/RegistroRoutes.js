@@ -17,6 +17,12 @@ const registroRouter = Router();
  *     summary: Crear un nuevo registro médico
  *     description: Crea un nuevo registro médico para un paciente, asociado a una cita y a un doctor.
  *     tags: [Registros Médicos]
+ *     parameters:
+ *       - name: isdoctor
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
  *     requestBody:
  *       required: true
  *       content:
@@ -74,6 +80,12 @@ registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
  *     tags: [Registros Médicos]
  * 
  *     parameters:
+ *       - in: header
+ *         name: isdoctor
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Indica si el usuario que realiza la solicitud es un secretario/a
  *       - in: path
  *         name: id
  *         required: true

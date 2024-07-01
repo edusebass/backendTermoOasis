@@ -5,13 +5,13 @@ import cors from 'cors';
 import usuarioRouter from './routes/UsuarioRoutes.js';
 import citasRouter from './routes/CitasRoutes.js';
 import registroRouter from './routes/RegistroRoutes.js';
-
 import swaggerUI from 'swagger-ui-express';
 import swaggerSpec from './utils/swagger.js'; 
 
 // Inicializaciones
 const app = express();
 dotenv.config();
+const CSS_URL ="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 // Configuraciones 
 app.set('port', process.env.PORT || 3001);
@@ -27,7 +27,6 @@ app.get('/', (req, res) => {
 app.use('/api', usuarioRouter); // Endpoints para usuarios
 app.use('/api/citas', citasRouter); // Endpoints para citas
 app.use('/api/registroMedico', registroRouter); // Endpoints para registros médicos
-const CSS_URL ="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 // Middleware de Swagger
 app.use('/api-docs', swaggerUI.serve,

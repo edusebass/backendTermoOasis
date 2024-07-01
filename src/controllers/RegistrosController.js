@@ -5,6 +5,12 @@ import RegistroMedicoModelo from "../models/RegistroMedico.js";
 const crearRegistro = async (req, res) => {
   const { idPaciente, idDoctor, idCita} = req.body;
 
+  const isDoctor = req.headers['isdoctor'] === 'true';
+
+  if (!isDoctor ) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+
   try {
     const existPaciente = await UsuarioModelo.find({
       _id: idPaciente,
@@ -72,6 +78,13 @@ const obtenerRegistroPaciente = async (req, res) => {
 
 const editarRegistro = async (req, res) => {
   const { id } = req.params;
+
+  const isDoctor = req.headers['isdoctor'] === 'true';
+
+  if (!isDoctor ) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+
   try {
     // Buscar el registro médico por su ID
     const registro = await RegistroMedicoModelo.findById(id);

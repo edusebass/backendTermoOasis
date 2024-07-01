@@ -1,10 +1,4 @@
 import swaggerJSDoc from 'swagger-jsdoc';
-import path from 'path';
-import { fileURLToPath } from 'url'; 
-
-// const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// console.log("adfasdf" + __dirname)
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -35,6 +29,5 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-
 
 export default swaggerSpec;
