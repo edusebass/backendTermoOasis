@@ -27,9 +27,10 @@ app.get('/', (req, res) => {
 app.use('/api', usuarioRouter); // Endpoints para usuarios
 app.use('/api/citas', citasRouter); // Endpoints para citas
 app.use('/api/registroMedico', registroRouter); // Endpoints para registros médicos
+const CSS_URL ="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 // Middleware de Swagger
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec, { customCssUrl: CSS_URL }));
 
 // Manejo de una ruta que no sea encontrada
 app.use((req, res) => res.status(404).send("Endpoint no encontrado - 404"));
