@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+console.log("adfasdf" + __dirname)
+
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
@@ -29,7 +31,8 @@ const swaggerOptions = {
         ],
     },
 
-    apis: [`${path.join(__dirname, "../routes/*.js")}`],
+    // apis: [`${path.join(__dirname, "../routes/*.js")}`],
+    apis: ["./src/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
