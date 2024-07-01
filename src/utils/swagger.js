@@ -31,12 +31,10 @@ const swaggerOptions = {
         ],
     },
 
-    // apis: [`${path.join(__dirname, "../routes/*.js")}`],
     apis: ["./src/**/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-
 
 
 export default swaggerSpec;
