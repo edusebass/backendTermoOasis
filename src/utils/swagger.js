@@ -14,7 +14,7 @@ const swaggerOptions = {
             version: '1.0.0',
             description: 'Documentacion para los endpoints',
         },
-        servers: [{ url: 'http://localhost:3001', description: 'Development server' }],
+        servers: [{ url: 'https://backend-termo-oasis.vercel.app', description: 'Production server' }],
         components: {
             securitySchemes: {
                 bearerAuth: {
