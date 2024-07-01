@@ -9,12 +9,6 @@ const crearCita = async (req, res) => {
 
   const isSecre = req.headers['issecre'] === 'true';
 
-  if (!isSecre ) {
-    return res.status(403).json({ msg: "Acceso denegado", status: false });
-  }
-
-  console.log(isSecre)
-
   // Verificar los permisos de acceso
   if (!isSecre) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
@@ -101,6 +95,14 @@ const crearCita = async (req, res) => {
 
 const cancelarCita = async (req, res) => {
   const { id } = req.params;
+  
+  const isSecre = req.headers['issecre'] === 'true';
+  const isPatient = req.headers['ispaciente'] === 'true';
+  
+  // Verificar los permisos de acceso
+  if (!isSecre && !isPatient) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
 
   if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 

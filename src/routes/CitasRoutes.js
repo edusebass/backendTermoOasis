@@ -19,8 +19,8 @@ const citaRouter = Router();
  *     description: Crear una nueva cita médica proporcionando la información necesaria.
  *     tags: [Citas Médicas]
  *     parameters:
- *       - name: issecre
- *         in: header
+ *       - in: header
+ *         name: issecre
  *         required: true
  *         schema:
  *           type: string
@@ -80,6 +80,18 @@ citaRouter.post("/registrar", verificarAutenticacion, crearCita);
  *         schema:
  *           type: string
  *         description: ID de la cita médica
+ *       - in: header
+ *         name: issecre
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Indica si el usuario es secretario
+ *       - in: header
+ *         name: ispaciente
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Indica si el usuario tiene el rol de paciente
  *     responses:
  *       '200':
  *         description: Cita cancelada exitosamente
@@ -87,6 +99,8 @@ citaRouter.post("/registrar", verificarAutenticacion, crearCita);
  *         description: No puedes cancelar la cita con menos de 24 horas de antelación
  *       '401':
  *         description: Cita no encontrada
+ *       '403':
+ *         description: Acceso denegado
  *       '500':
  *         description: Error en el servidor
  */
@@ -110,7 +124,7 @@ citaRouter.put("/cancelar/:id", verificarAutenticacion, cancelarCita);
  *         in: header
  *         required: true
  *         schema:
- *           type: boolean
+ *           type: string
  *         description: Indica si el usuario es secretario
  *     requestBody:
  *       required: true
@@ -275,6 +289,24 @@ citaRouter.get("/mostrar-todas", verificarAutenticacion, mostrarCitas);
  *         schema:
  *           type: string
  *         description: ID de la cita médica
+ *       - name: issecre
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de secretario/a.
+ *       - name: isdoctor
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de doctor/a.
+ *       - name: ispaciente
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de paciente.
  *     responses:
  *       '200':
  *         description: Detalles de la cita médica encontrada
@@ -367,6 +399,24 @@ citaRouter.get("/mostrar/:id", verificarAutenticacion, mostrarCitaID);
  *         schema:
  *           type: string
  *         description: ID del paciente
+ *       - name: issecre
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de secretario/a.
+ *       - name: isdoctor
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de doctor/a.
+ *       - name: ispaciente
+ *         in: header
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Indica si el usuario tiene el rol de paciente.
  *     responses:
  *       '200':
  *         description: Lista de citas médicas del paciente encontradas
