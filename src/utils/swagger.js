@@ -2,17 +2,17 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import path from 'path';
 import { fileURLToPath } from 'url'; 
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-console.log("adfasdf" + __dirname)
+// console.log("adfasdf" + __dirname)
 
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'API Documentation',
+            title: 'API Documentacion TERMO OASIS',
             version: '1.0.0',
-            description: 'Documentation for your API endpoints',
+            description: 'Documentacion para los endpoints',
         },
         servers: [{ url: 'http://localhost:3001', description: 'Development server' }],
         components: {
