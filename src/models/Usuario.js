@@ -13,7 +13,7 @@ const UsuarioSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    contraseña: {
+    password: {
       type: String,
       trim: true,
     },
@@ -83,15 +83,15 @@ const UsuarioSchema = mongoose.Schema(
   }
 );
 
-UsuarioSchema.methods.encrypContraseña = async function(contraseña){
+UsuarioSchema.methods.encrypPassword = async function(password){
     const salt = await bcrypt.genSalt(10)
-    const contrasenaEncryp = await bcrypt.hash(contraseña, salt)
+    const contrasenaEncryp = await bcrypt.hash(password, salt)
     return contrasenaEncryp
 }
 
 // Método para verificar si el Contrasena ingresado es el mismo de la BDD
-UsuarioSchema.methods.matchContraseña = async function(contraseña){
-    const response = await bcrypt.compare(contraseña, this.contraseña)
+UsuarioSchema.methods.matchPassword = async function(password){
+    const response = await bcrypt.compare(password, this.password)
     return response
 }
 

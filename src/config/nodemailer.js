@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import dotenv from 'dotenv'
-import { formatoEmailActualizacionCita, formatoEmailCancelacionCita, formatoEmailCreacionCita, formatoEmailRecordatorioCita, formatoEmailRecuperarContraseña, formatoEmailRecuperarContraseñaMovil } from "../utils/formatosEmail.js";
+import { formatoEmailActualizacionCita, formatoEmailCancelacionCita, formatoEmailCreacionCita, formatoEmailRecordatorioCita, formatoEmailRecuperarPassword, formatoEmailRecuperarPasswordMovil } from "../utils/formatosEmail.js";
 dotenv.config()
 
 let transporter = nodemailer.createTransport({
@@ -13,22 +13,22 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-const emailMailRecuperarContraseña = async (userMail, token) =>{
+const emailMailRecuperarPassword = async (userMail, token) =>{
     let info = await transporter.sendMail({
         from: process.env.USER_MAILTRAP,
         to: userMail,
-        subject: "Correo para reestablecer tu contraseña",
-        html: formatoEmailRecuperarContraseña(token)
+        subject: "Correo para reestablecer tu password",
+        html: formatoEmailRecuperarPassword(token)
     });
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
 }
 
-const emailMailRecuperarContraseñaMovil = async (userMail, contraseña) =>{
+const emailMailRecuperarPasswordMovil = async (userMail, password) =>{
     let info = await transporter.sendMail({
         from: process.env.USER_MAILTRAP,
         to: userMail,
-        subject: "Correo para reestablecer tu contraseña",
-        html: formatoEmailRecuperarContraseñaMovil(contraseña)
+        subject: "Correo para reestablecer tu password",
+        html: formatoEmailRecuperarPasswordMovil(password)
     });
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);
 }
@@ -87,10 +87,10 @@ const emailRecordatorioCita = async (email, fecha) => {
 };
 
 export {
-    emailMailRecuperarContraseña,
+    emailMailRecuperarPassword,
     emailActualizarCita,
     enviarEmailCita,
     emailCancelarCita,
-    emailMailRecuperarContraseñaMovil,
+    emailMailRecuperarPasswordMovil,
     emailRecordatorioCita
 }

@@ -3,12 +3,12 @@ import verificarAutenticacion from '../middlewares/autenticacion.js'
 import{
     login,
     registro,
-    recuperarContraseña,
-    nuevaContraseña,
+    recuperarPassword,
+    nuevaPassword,
     obtenerPacientes,
     perfil,
-    comprobarTokenContraseña,
-    recuperarContraseñaMovil,
+    comprobarTokenPassword,
+    recuperarPasswordMovil,
     detallePaciente,
     eliminarUsuario,
 } from "../controllers/UsuarioController.js";
@@ -19,7 +19,7 @@ const usuarioRouter = Router()
  * /api/login:
  *   post:
  *     summary: Iniciar sesión de usuario
- *     description: Permite a un usuario iniciar sesión proporcionando su email y contraseña.
+ *     description: Permite a un usuario iniciar sesión proporcionando su email y password.
  *     tags: [Usuarios]
  *     requestBody:
  *       required: true
@@ -32,7 +32,7 @@ const usuarioRouter = Router()
  *                 type: string
  *                 format: email
  *                 example: usuario@example.com
- *               contraseña:
+ *               password:
  *                 type: string
  *                 format: password
  *                 example: password123
@@ -91,7 +91,7 @@ const usuarioRouter = Router()
  *       400:
  *         description: Error al intentar iniciar sesión
  *       404:
- *         description: Usuario no encontrado o contraseña incorrecta
+ *         description: Usuario no encontrado o password incorrecta
  *       500:
  *         description: Error en el servidor
  */
@@ -102,7 +102,7 @@ usuarioRouter.post("/login", login)
  * /api/registro:
  *   post:
  *     summary: Registrar nuevo usuario
- *     description: Permite registrar un nuevo usuario con email y contraseña.
+ *     description: Permite registrar un nuevo usuario con email y password.
  *     tags: [Usuarios]
  *     requestBody:
  *       required: true
@@ -115,7 +115,7 @@ usuarioRouter.post("/login", login)
  *                 type: string
  *                 format: email
  *                 example: usuario@example.com
- *               contraseña:
+ *               password:
  *                 type: string
  *                 format: password
  *                 example: password123
@@ -166,8 +166,8 @@ usuarioRouter.post("/registro", registro)
  * @swagger
  * /api/recuperar-password:
  *   post:
- *     summary: Recuperar contraseña frontend
- *     description: Permite solicitar la recuperación de contraseña mediante el envío de un correo electrónico.
+ *     summary: Recuperar password frontend
+ *     description: Permite solicitar la recuperación de password mediante el envío de un correo electrónico.
  *     tags: [Usuarios]
  *     requestBody:
  *       required: true
@@ -183,7 +183,7 @@ usuarioRouter.post("/registro", registro)
  *               email: usuario@example.com
  *     responses:
  *       200:
- *         description: Se ha enviado un correo electrónico para restablecer la contraseña.
+ *         description: Se ha enviado un correo electrónico para restablecer la password.
  *         content:
  *           application/json:
  *             schema:
@@ -191,7 +191,7 @@ usuarioRouter.post("/registro", registro)
  *               properties:
  *                 msg:
  *                   type: string
- *                 tokenContraseña:
+ *                 tokenPassword:
  *                   type: string
  *       404:
  *         description: Error si algún campo está vacío o el usuario no está registrado.
@@ -203,25 +203,25 @@ usuarioRouter.post("/registro", registro)
  *                 msg:
  *                   type: string
  */
-usuarioRouter.post("/recuperar-password", recuperarContraseña)
+usuarioRouter.post("/recuperar-password", recuperarPassword)
 
 /**
  * @swagger
  * /api/recuperar-password/{token}:
  *   get:
- *     summary: Comprobar token de recuperación de contraseña
- *     description: Verifica si el token proporcionado es válido para restablecer la contraseña del usuario.
+ *     summary: Comprobar token de recuperación de password
+ *     description: Verifica si el token proporcionado es válido para restablecer la password del usuario.
  *     tags: [Usuarios]
  *     parameters:
  *       - in: path
  *         name: token
  *         required: true
- *         description: Token de recuperación de contraseña recibido por correo electrónico.
+ *         description: Token de recuperación de password recibido por correo electrónico.
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Token confirmado, el usuario puede crear su nueva contraseña.
+ *         description: Token confirmado, el usuario puede crear su nueva password.
  *         content:
  *           application/json:
  *             schema:
@@ -239,39 +239,39 @@ usuarioRouter.post("/recuperar-password", recuperarContraseña)
  *                 msg:
  *                   type: string
  */
-usuarioRouter.get("/recuperar-password/:token", comprobarTokenContraseña);
+usuarioRouter.get("/recuperar-password/:token", comprobarTokenPassword);
 
 /**
  * @swagger
  * /api/nueva-password/{token}:
  *   post:
- *     summary: Restablecer contraseña con token de recuperación
- *     description: Permite al usuario restablecer su contraseña utilizando el token de recuperación recibido por correo electrónico.
+ *     summary: Restablecer password con token de recuperación
+ *     description: Permite al usuario restablecer su password utilizando el token de recuperación recibido por correo electrónico.
  *     tags: [Usuarios]
  *     parameters:
  *       - in: path
  *         name: token
  *         required: true
- *         description: Token de recuperación de contraseña recibido por correo electrónico.
+ *         description: Token de recuperación de password recibido por correo electrónico.
  *         schema:
  *           type: string
  *       - in: body
  *         name: body
  *         required: true
- *         description: Datos necesarios para restablecer la contraseña.
+ *         description: Datos necesarios para restablecer la password.
  *         schema:
  *           type: object
  *           required:
- *             - contraseña
- *             - confirmContraseña
+ *             - password
+ *             - confirmPassword
  *           properties:
- *             contraseña:
+ *             password:
  *               type: string
- *             confirmContraseña:
+ *             confirmPassword:
  *               type: string
  *     responses:
  *       200:
- *         description: Contraseña restablecida exitosamente.
+ *         description: password restablecida exitosamente.
  *         content:
  *           application/json:
  *             schema:
@@ -289,14 +289,14 @@ usuarioRouter.get("/recuperar-password/:token", comprobarTokenContraseña);
  *                 msg:
  *                   type: string
  */
-usuarioRouter.post("/nueva-password/:token", nuevaContraseña)
+usuarioRouter.post("/nueva-password/:token", nuevaPassword)
 
 /**
  * @swagger
  * /api/recuperar-password-movil:
  *   post:
- *     summary: Recuperar contraseña para móvil
- *     description: Permite al usuario recuperar su contraseña utilizando su nombre, apellido y correo electrónico registrados.
+ *     summary: Recuperar password para móvil
+ *     description: Permite al usuario recuperar su password utilizando su nombre, apellido y correo electrónico registrados.
  *     tags: [Usuarios]
  *     requestBody:
  *       required: true
@@ -317,7 +317,7 @@ usuarioRouter.post("/nueva-password/:token", nuevaContraseña)
  *                 type: string
  *     responses:
  *       200:
- *         description: Se envió la nueva contraseña al correo registrado del usuario.
+ *         description: Se envió la nueva password al correo registrado del usuario.
  *         content:
  *           application/json:
  *             schema:
@@ -335,7 +335,7 @@ usuarioRouter.post("/nueva-password/:token", nuevaContraseña)
  *                 msg:
  *                   type: string
  */
-usuarioRouter.post("/recuperar-password-movil", recuperarContraseñaMovil) 
+usuarioRouter.post("/recuperar-password-movil", recuperarPasswordMovil) 
 
 /**
  * @swagger

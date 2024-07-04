@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 dotenv.config()
 
-export const formatoEmailRecuperarContraseña = (token) => {
+export const formatoEmailRecuperarPassword = (token) => {
     return (`
         <head>
             <style>
@@ -50,11 +50,11 @@ export const formatoEmailRecuperarContraseña = (token) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>RESTABLECE TU CONTRASEÑA</h1>
+                    <h1>RESTABLECE TU password</h1>
                 </div>
                 <div class="content">
                     <p>Saludos,</p>
-                    <p>Para restablecer tu contraseña porfavor ingresa al siguiente enlace:</p>
+                    <p>Para restablecer tu password porfavor ingresa al siguiente enlace:</p>
                     <hr>
                     <a href=${process.env.URL_FRONTEND}restablecerPass/${token}>Click aqui<a>
                 </div>
@@ -69,7 +69,7 @@ export const formatoEmailRecuperarContraseña = (token) => {
     `)
 }
 
-export const formatoEmailRecuperarContraseñaMovil = (contraseña) => {
+export const formatoEmailRecuperarPasswordMovil = (password) => {
     return (`
         <head>
             <style>
@@ -115,13 +115,13 @@ export const formatoEmailRecuperarContraseñaMovil = (contraseña) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>RESTABLECE TU CONTRASEÑA</h1>
+                    <h1>RESTABLECE TU password</h1>
                 </div>
                 <div class="content">
                     <p>Saludos,</p>
-                    <p>Esta es tu nueva contraseña:</p>
+                    <p>Esta es tu nueva password:</p>
                     <hr>
-                    <p>${contraseña}<p/>
+                    <p>${password}<p/>
                 </div>
                 <div class="footer">
                     <p>&copy; 2024 TERMO OASIS. Todos los derechos reservados.</p>

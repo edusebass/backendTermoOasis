@@ -1,17 +1,17 @@
 import Usuario from "../models/Usuario.js";
 import generarJWT from "../helpers/crearJWT.js"
 import mongoose from "mongoose";
-import { emailMailRecuperarContraseña, emailMailRecuperarContraseñaMovil } from "../config/nodemailer.js";
+import { emailMailRecuperarPassword, emailMailRecuperarPasswordMovil } from "../config/nodemailer.js";
 import UsuarioModelo from "../models/Usuario.js";
-import { generateRandomPassword } from "../helpers/generadorContraseña.js";
+import { generateRandomPassword } from "../helpers/generadorPassword.js";
 
 const login = async(req,res)=>{
-    const {email,contraseña} = req.body
+    const {email,password} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
     const usuarioBDD = await Usuario.findOne({email}).select("-__v -token -updatedAt -createdAt -citas -pacientes")
     if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
-    const verificarcontraseña = await usuarioBDD.matchContraseña(contraseña)
-    if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, la contraseña no es la correcta"})
+    const verificarcontraseña = await usuarioBDD.matchPassword(password)
+    if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, la password no es la correcta"})
     const token = generarJWT(usuarioBDD._id,"usuario")
     const {nombre,apellido, _id, isPaciente, isDoctor, isSecre, fechaNacimiento, lugarNacimiento, estadoCivil, direccion, telefono, cedula} = usuarioBDD
     res.status(200).json({
@@ -34,7 +34,7 @@ const login = async(req,res)=>{
 
 const registro =async (req,res)=>{
     // Desestructura los campos
-    const {email,contraseña} = req.body
+    const {email,password} = req.body
     // Validar todos los campos llenos
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
     // Obtener el usuario de la BDD en base al email
@@ -43,15 +43,15 @@ const registro =async (req,res)=>{
     if(verificarEmailBDD) return res.status(400).json({msg:"Lo sentimos, el email ya se encuentra registrado"})
     // Crear una instancia del Usuario
     const nuevoUsuario = new Usuario(req.body)
-    // Encriptar el contraseña
-    nuevoUsuario.contraseña = await nuevoUsuario.encrypContraseña(contraseña)
+    // Encriptar el password
+    nuevoUsuario.password = await nuevoUsuario.encrypPassword(password)
     // Guardar en base de datos
     await nuevoUsuario.save()
     // Responder
     res.status(200).json({msg:"Usuario registrado"})
 }
 
-const recuperarContraseña = async(req,res)=>{
+const recuperarPassword = async(req,res)=>{
     const {email} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
     // Verifica si existe el usuario
@@ -60,15 +60,15 @@ const recuperarContraseña = async(req,res)=>{
     // si existe envia el email
     const token = usuarioBDD.crearToken()
     usuarioBDD.token = token
-    await emailMailRecuperarContraseña(email, token)
+    await emailMailRecuperarPassword(email, token)
     await usuarioBDD.save()
     res.status(200).json({
-        msg:"Revisa tu correo electrónico para restablecer tu contraseña",
-        tokenContraseña: usuarioBDD.token
+        msg:"Revisa tu correo electrónico para restablecer tu password",
+        tokenPassword: usuarioBDD.token
     })
 }
 
-const comprobarTokenContraseña = async (req,res)=>{
+const comprobarTokenPassword = async (req,res)=>{
     if(!(req.params.token)) return res.status(404).json({msg:"Lo sentimos, no se puede validar la cuenta"})
     const usuarioBDD = await UsuarioModelo.findOne({token:req.params.token})
     if(usuarioBDD?.token !== req.params.token) return res.status(404).json({msg:"Lo sentimos, no se puede validar la cuenta"})
@@ -76,17 +76,17 @@ const comprobarTokenContraseña = async (req,res)=>{
     res.status(200).json({msg:"Token confirmado, ya puedes crear tu nuevo password"}) 
 }
 
-const nuevaContraseña = async (req,res)=>{
-    const{contraseña, confirmContraseña} = req.body
+const nuevaPassword = async (req,res)=>{
+    const{password, confirmPassword} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
-    if(contraseña != confirmContraseña) return res.status(404).json({msg:"Lo sentimos, los contraseñas no coinciden"})
+    if(password != confirmPassword) return res.status(404).json({msg:"Lo sentimos, los contraseñas no coinciden"})
 
     const usuarioBDD = await Usuario.findOne({token:req.params.token})
     if(usuarioBDD?.token !== req.params.token) return res.status(404).json({msg:"Lo sentimos, no se puede validar la cuenta"})
     usuarioBDD.token = null
-    usuarioBDD.contraseña = await usuarioBDD.encrypContraseña(contraseña)
+    usuarioBDD.password = await usuarioBDD.encrypPassword(password)
     await usuarioBDD.save()
-    res.status(200).json({msg:"Felicitaciones, ya puedes iniciar sesión con tu nuevo contraseña"}) 
+    res.status(200).json({msg:"Felicitaciones, ya puedes iniciar sesión con tu nuevo password"}) 
 }
 
 const obtenerPacientes = async (req, res) => {
@@ -114,7 +114,7 @@ const perfil =(req,res)=>{
     res.status(200).json(req.usuarioBDD)
 }
 
-const recuperarContraseñaMovil = async (req, res) => {
+const recuperarPasswordMovil = async (req, res) => {
 
     const { nombre, apellido, email } = req.body;
 
@@ -130,13 +130,13 @@ const recuperarContraseñaMovil = async (req, res) => {
     }
 
     // si existe, envía el email
-    const nuevaContraseña = generateRandomPassword();
+    const nuevaPassword = generateRandomPassword();
 
-    await emailMailRecuperarContraseñaMovil(email, nuevaContraseña);
-    usuarioBDD.contraseña = await usuarioBDD.encrypContraseña(nuevaContraseña);
+    await emailMailRecuperarPasswordMovil(email, nuevaPassword);
+    usuarioBDD.password = await usuarioBDD.encrypPassword(nuevaPassword);
     await usuarioBDD.save();
 
-    res.status(200).json({ msg: "Se envió tu nueva contraseña al correo registrado del usuario" });
+    res.status(200).json({ msg: "Se envió tu nueva password al correo registrado del usuario" });
 }
 
 const detallePaciente = async(req, res) => {
@@ -176,11 +176,11 @@ const eliminarUsuario = async (req, res) => {
 export{
     login,
     registro,
-    recuperarContraseña,
-    nuevaContraseña,
+    recuperarPassword,
+    nuevaPassword,
     perfil,
-    comprobarTokenContraseña,
-    recuperarContraseñaMovil,
+    comprobarTokenPassword,
+    recuperarPasswordMovil,
     detallePaciente,
     obtenerPacientes,
     eliminarUsuario,
