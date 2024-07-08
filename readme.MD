@@ -54,7 +54,7 @@ URL_FRONTEND="url donde este el frontend"
 npm install
 ```
 
-- Ejecutar el servidor de la API
+- Ejecutar el servidor
 
 ```
 npm run dev
