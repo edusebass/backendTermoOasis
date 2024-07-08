@@ -118,11 +118,8 @@ const cancelarCita = async (req, res) => {
 
     const ahora = new Date();
     const inicioCita = new Date(cita.start);
-
     console.log(inicioCita)
-
     const diferenciaTiempo = inicioCita.getTime() - ahora.getTime();
-
     if (diferenciaTiempo < 86400000) {
       return res.status(400).json({ msg: "No puedes cancelar la cita con menos de 24 horas de antelación" });
     }
@@ -132,9 +129,7 @@ const cancelarCita = async (req, res) => {
       doctorEmail: cita.idDoctor.email,
       cita,
     });
-    
     await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
-    
     res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
   } catch (error) {
     res.status(400).json({ msg: error.message, status: false });
@@ -143,8 +138,14 @@ const cancelarCita = async (req, res) => {
 
 const editarCita = async (req, res) => {
   const { id } = req.params;
+  const isSecre = req.headers['issecre'] === 'true';
+  
   try {
     const cita = await CitaModelo.findById(id);
+
+    if (!isSecre) {
+      return res.status(403).json({ msg: "Acceso denegado", status: false });
+    }
 
     if (!cita) {
       const error = new Error("Cita no encontrada");
@@ -184,7 +185,7 @@ const editarCita = async (req, res) => {
         cita
       });
 
-      res.status(200).json({ msg: citastored, status: true });
+      res.status(200).json({ response:"Cita actualizada exitosamente" ,msg: citastored, status: true });
     } else {
       const error = new Error("Usuario no autorizado para esta accion");
       return res.status(400).json({ msg: error.message, status: false });
@@ -206,9 +207,8 @@ const mostrarCitas = async (req, res) => {
   }
   
   try {
-    const citas = await CitaModelo.find().populate("idPaciente")
+    const citas = await CitaModelo.find().populate();
 
-    // ordena el orden de muestra de la cita
     citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
 
     res.status(200).json({ data: citas, status: true });
