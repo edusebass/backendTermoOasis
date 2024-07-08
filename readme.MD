@@ -1,12 +1,18 @@
-# API TERMO OASIS
+# APIRESTful TERMO OASIS
 
-## Documentacion Api
-
-https://backend-termo-oasis.vercel.app/api-docs/
+## Documentacion
 
 **Backend**
 
 TERMO OASIS cuenta con un robusto backend desarrollado en Node.js con Express, diseñado para gestionar eficientemente las operaciones de un centro de terapias alternativas.
+
+El backend ya está desplegado y accesible en la siguiente URL
+
+https://backend-termo-oasis.vercel.app/
+
+Puedes acceder a la documentación completa mediante este link
+
+https://backend-termo-oasis.vercel.app/api-docs/
 
 ### Características principales del backend:
 
