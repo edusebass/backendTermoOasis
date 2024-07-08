@@ -288,7 +288,7 @@ const verificarCitasProximas = async () => {
       await cita.save();
     }
 
-    console.log("aqui");
+    console.log("Revisando si hay citas proximas...");
   } catch (error) {
     console.error('Error al verificar las citas próximas:', error);
   }
