@@ -5,10 +5,20 @@ import { emailMailRecuperarPassword, emailMailRecuperarPasswordMovil } from "../
 import UsuarioModelo from "../models/Usuario.js";
 import { generateRandomPassword } from "../helpers/generadorPassword.js";
 
+const registro = async (req,res)=>{
+    const {email,password} = req.body
+    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+    const verificarEmailBDD = await Usuario.findOne({email})
+    if(verificarEmailBDD) return res.status(400).json({msg:"Lo sentimos, el email ya se encuentra registrado"})
+    const nuevoUsuario = new Usuario(req.body)
+    nuevoUsuario.password = await nuevoUsuario.encrypPassword(password)
+    await nuevoUsuario.save()
+    res.status(200).json({msg:"Usuario registrado"})
+}
 const login = async(req,res)=>{
     const {email,password} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
-    const usuarioBDD = await Usuario.findOne({email}).select("-__v -token -updatedAt -createdAt -citas -pacientes")
+    const usuarioBDD = await Usuario.findOne({email})
     if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
     const verificarcontraseña = await usuarioBDD.matchPassword(password)
     if(!verificarcontraseña) return res.status(404).json({msg:"Lo sentimos, la password no es la correcta"})
@@ -32,32 +42,11 @@ const login = async(req,res)=>{
     })
 }
 
-const registro =async (req,res)=>{
-    // Desestructura los campos
-    const {email,password} = req.body
-    // Validar todos los campos llenos
-    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
-    // Obtener el usuario de la BDD en base al email
-    const verificarEmailBDD = await Usuario.findOne({email})
-    // Validar que el email sea nuevo
-    if(verificarEmailBDD) return res.status(400).json({msg:"Lo sentimos, el email ya se encuentra registrado"})
-    // Crear una instancia del Usuario
-    const nuevoUsuario = new Usuario(req.body)
-    // Encriptar el password
-    nuevoUsuario.password = await nuevoUsuario.encrypPassword(password)
-    // Guardar en base de datos
-    await nuevoUsuario.save()
-    // Responder
-    res.status(200).json({msg:"Usuario registrado"})
-}
-
 const recuperarPassword = async(req,res)=>{
     const {email} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
-    // Verifica si existe el usuario
     const usuarioBDD = await Usuario.findOne({email})
     if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
-    // si existe envia el email
     const token = usuarioBDD.crearToken()
     usuarioBDD.token = token
     await emailMailRecuperarPassword(email, token)
@@ -89,47 +78,19 @@ const nuevaPassword = async (req,res)=>{
     res.status(200).json({msg:"Felicitaciones, ya puedes iniciar sesión con tu nuevo password"}) 
 }
 
-const obtenerPacientes = async (req, res) => {
-    const isSecre = req.headers['issecre'] === 'true';
-    const isDoctor = req.headers['isdoctor'] === 'true';
-
-    if (!isSecre && !isDoctor) {
-        return res.status(403).json({ msg: "Acceso denegado", status: false });
-    }
-  
-    try {
-      const pacientes = await UsuarioModelo.find({ isPaciente: true })
-      
-      res.status(200).json({ data: pacientes, status: true });
-    } catch (error) {
-      res.status(400).json({ msg: error.message, status: false });
-    }
-};
-
-const perfil =(req,res)=>{
-    delete req.usuarioBDD.token
-    delete req.usuarioBDD.createdAt
-    delete req.usuarioBDD.updatedAt
-    delete req.usuarioBDD.__v
-    res.status(200).json(req.usuarioBDD)
-}
-
 const recuperarPasswordMovil = async (req, res) => {
-
     const { nombre, apellido, email } = req.body;
 
     if (Object.values(req.body).includes("")) {
         return res.status(404).json({ msg: "Lo sentimos, debes llenar todos los campos" });
     }
 
-    // Verifica si existe el usuario
     const usuarioBDD = await Usuario.findOne({ nombre, apellido, email });
 
     if (!usuarioBDD) {
         return res.status(404).json({ msg: "Lo sentimos, el usuario no se encuentra registrado" });
     }
 
-    // si existe, envía el email
     const nuevaPassword = generateRandomPassword();
 
     await emailMailRecuperarPasswordMovil(email, nuevaPassword);
@@ -139,26 +100,28 @@ const recuperarPasswordMovil = async (req, res) => {
     res.status(200).json({ msg: "Se envió tu nueva password al correo registrado del usuario" });
 }
 
-const detallePaciente = async(req, res) => {
+const obtenerPacientes = async (req, res) => {
     const isSecre = req.headers['issecre'] === 'true';
     const isDoctor = req.headers['isdoctor'] === 'true';
-    const isPaciente = req.headers['ispaciente'] === 'true';
-  
-    if (!isSecre && !isDoctor && !isPaciente) {
-      return res.status(403).json({ msg: "Acceso denegado", status: false });
-    }
 
-    const { id } = req.params
-    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos no existe el paciente ${id}`});
-    const paciente = await Usuario.findById(id).select("-createdAt -updatedAt -__v")
-    res.status(200).json({paciente})
-}
+    if (!isSecre && !isDoctor) {
+        return res.status(403).json({ msg: "Acceso denegado", status: false });
+    }
+    try {
+        const pacientes = await UsuarioModelo.find({ isPaciente: true }).select('-password');
+        
+        res.status(200).json({ data: pacientes, status: true });
+    } catch (error) {
+        res.status(400).json({ msg: error.message, status: false });
+    }
+};
+
 
 const eliminarUsuario = async (req, res) => {
     const isSecre = req.headers['issecre'] === 'true';
-  
+
     if (!isSecre) {
-      return res.status(403).json({ msg: "Acceso denegado", status: false });
+        return res.status(403).json({ msg: "Acceso denegado", status: false });
     }
     
     const { id } = req.params;
@@ -172,6 +135,29 @@ const eliminarUsuario = async (req, res) => {
     }
     res.status(200).json({ msg: 'Usuario eliminado exitosamente', usuarioEliminado });
 };
+
+const detallePaciente = async(req, res) => {
+    const isSecre = req.headers['issecre'] === 'true';
+    const isDoctor = req.headers['isdoctor'] === 'true';
+    const isPaciente = req.headers['ispaciente'] === 'true';
+  
+    if (!isSecre && !isDoctor && !isPaciente) {
+        return res.status(403).json({ msg: "Acceso denegado", status: false });
+    }
+
+    const { id } = req.params
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos no existe el paciente ${id}`});
+    const paciente = await Usuario.findById(id).select("-createdAt -updatedAt -__v")
+    res.status(200).json({paciente})
+}
+
+const perfil =(req,res)=>{
+    delete req.usuarioBDD.token
+    delete req.usuarioBDD.createdAt
+    delete req.usuarioBDD.updatedAt
+    delete req.usuarioBDD.__v
+    res.status(200).json(req.usuarioBDD)
+}
 
 export{
     login,
