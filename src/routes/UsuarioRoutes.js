@@ -255,20 +255,6 @@ usuarioRouter.get("/recuperar-password/:token", comprobarTokenPassword);
  *         description: Token de recuperación de password recibido por correo electrónico.
  *         schema:
  *           type: string
- *       - in: body
- *         name: body
- *         required: true
- *         description: Datos necesarios para restablecer la password.
- *         schema:
- *           type: object
- *           required:
- *             - password
- *             - confirmPassword
- *           properties:
- *             password:
- *               type: string
- *             confirmPassword:
- *               type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -276,11 +262,13 @@ usuarioRouter.get("/recuperar-password/:token", comprobarTokenPassword);
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               password:
  *                 type: string
- *                 format: email
+ *               confirmPassword:
+ *                 type: string
  *             example:
- *               email: usuario@example.com
+ *               password: qweasdzxc123.
+ *               confirmPassword: qweasdzxc123.
  *     responses:
  *       200:
  *         description: password restablecida exitosamente.
