@@ -33,10 +33,10 @@ const citaRouter = Router();
  *             type: object
  *             properties:
  *               idPaciente:
- *                 type: string
+ *                 type: ObjectId 
  *                 description: ID del paciente
  *               idDoctor:
- *                 type: string
+ *                 type: ObjectId 
  *                 description: ID del doctor
  *               start:
  *                 type: string
