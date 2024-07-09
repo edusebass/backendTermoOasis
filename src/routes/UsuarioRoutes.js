@@ -269,6 +269,18 @@ usuarioRouter.get("/recuperar-password/:token", comprobarTokenPassword);
  *               type: string
  *             confirmPassword:
  *               type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *             example:
+ *               email: usuario@example.com
  *     responses:
  *       200:
  *         description: password restablecida exitosamente.
@@ -544,6 +556,7 @@ usuarioRouter.get("/listar-pacientes", verificarAutenticacion, obtenerPacientes)
  *         description: Error al intentar obtener los detalles del paciente.
  */
 usuarioRouter.get("/detallePaciente/:id", verificarAutenticacion, detallePaciente)
+
 
 /**
  * @swagger
