@@ -39,6 +39,13 @@ const crearRegistro = async (req, res) => {
       const error = new Error("Cita no registrada");
       return res.status(400).json({ msg: error.message, status: false });
     }
+    console.log(existCita[0])
+
+    // Verificar si la cita ya tiene un registro médico asociado
+    if (existCita[0].registroMedico) {
+      const error = new Error("Ya existe un registro médico para esta cita");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
 
     const registro = new RegistroMedicoModelo(req.body);
 
