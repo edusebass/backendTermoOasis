@@ -35,8 +35,32 @@ const crearCita = async (req, res) => {
     }
 
     const startISO = req.body.start; 
+    const endISO = req.body.end; 
 
     let inicioInput = new Date(startISO);
+    let finInput = new Date(endISO);
+    if (inicioInput < new Date() || finInput < new Date()) {
+      const error = new Error("No puedes agendar citas en el pasado");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
+
+    // Verificar si las fechas de inicio y fin son iguales
+    if (inicioInput.getTime() === finInput.getTime()) {
+      const error = new Error("Debes elegir un horario de inicio y fin diferente");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
+
+    // Verificar si la diferencia entre las fechas es menor a una hora
+    const diferenciaHoras = (finInput.getTime() - inicioInput.getTime()) / (1000 * 60 * 60);
+    if (diferenciaHoras < 1) {
+      const error = new Error("La diferencia entre la hora de inicio y fin debe ser de al menos una hora, en el mismo dia y en el mismo mes");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
+
+    // Verificar si start y end están en el mismo día
+    if (inicioInput.toISOString().substr(0, 10) !== finInput.toISOString().substr(0, 10)) {
+      throw new Error("El inicio y fin de la cita deben ser en el mismo día");
+  }
 
     inicioInput.setHours(inicioInput.getHours() - 5);
 
