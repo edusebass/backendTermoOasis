@@ -121,49 +121,6 @@ const crearCita = async (req, res) => {
   }
 };
 
-const cancelarCita = async (req, res) => {
-  const { id } = req.params;
-  
-  const isSecre = req.headers['issecre'] === 'true';
-  const isPatient = req.headers['ispaciente'] === 'true';
-  
-  // Verificar los permisos de acceso
-  if (!isSecre && !isPatient) {
-    return res.status(403).json({ msg: "Acceso denegado", status: false });
-  }
-
-  if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
-
-  try {
-    const cita = await CitaModelo.findById(id)
-      .populate("idDoctor")
-      .populate("idPaciente");
-
-    if (!cita) {
-      const error = new Error("Cita no encontrada");
-      return res.status(401).json({ msg: error.message });
-    }
-
-    const ahora = new Date();
-    const inicioCita = new Date(cita.start);
-    console.log(inicioCita)
-    const diferenciaTiempo = inicioCita.getTime() - ahora.getTime();
-    if (diferenciaTiempo < 86400000) {
-      return res.status(400).json({ msg: "No puedes cancelar la cita con menos de 24 horas de antelación" });
-    }
-
-    emailCancelarCita({
-      email: cita.idPaciente.email,
-      doctorEmail: cita.idDoctor.email,
-      cita,
-    });
-    await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
-    res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
-  } catch (error) {
-    res.status(400).json({ msg: error.message, status: false });
-  }
-};
-
 const editarCita = async (req, res) => {
   const { id } = req.params;
   const isSecre = req.headers['issecre'] === 'true';
@@ -256,6 +213,72 @@ const editarCita = async (req, res) => {
   }
 };
 
+const mostrarCitasPorPaciente = async (req, res) => {
+  const { id } = req.params;
+  const isSecre = req.headers['issecre'] === 'true';
+  const isDoctor = req.headers['isdoctor'] === 'true';
+  const isPaciente = req.headers['ispaciente'] === 'true';
+
+  if (!isSecre && !isDoctor && !isPaciente) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+  console.log(id)
+  console.log(typeof id)
+  try {
+      const dates = await CitaModelo.find({
+        idPaciente: id,
+      }).populate("idDoctor")
+      
+      res.status(200).json({ data: dates, status: true });
+    
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
+
+const cancelarCita = async (req, res) => {
+  const { id } = req.params;
+  
+  const isSecre = req.headers['issecre'] === 'true';
+  const isPatient = req.headers['ispaciente'] === 'true';
+  
+  // Verificar los permisos de acceso
+  if (!isSecre && !isPatient) {
+    return res.status(403).json({ msg: "Acceso denegado", status: false });
+  }
+
+  if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+
+  try {
+    const cita = await CitaModelo.findById(id)
+      .populate("idDoctor")
+      .populate("idPaciente");
+
+    if (!cita) {
+      const error = new Error("Cita no encontrada");
+      return res.status(401).json({ msg: error.message });
+    }
+
+    const ahora = new Date();
+    const inicioCita = new Date(cita.start);
+    console.log(inicioCita)
+    const diferenciaTiempo = inicioCita.getTime() - ahora.getTime();
+    if (diferenciaTiempo < 86400000) {
+      return res.status(400).json({ msg: "No puedes cancelar la cita con menos de 24 horas de antelación" });
+    }
+
+    emailCancelarCita({
+      email: cita.idPaciente.email,
+      doctorEmail: cita.idDoctor.email,
+      cita,
+    });
+    await CitaModelo.updateOne({ _id: id }, { isCancelado: true });
+    res.status(200).json({ msg: "Cita cancelada exitosamente", status: true });
+  } catch (error) {
+    res.status(400).json({ msg: error.message, status: false });
+  }
+};
+
 const mostrarCitas = async (req, res) => {
   const isSecre = req.headers['issecre'] === 'true';
   const isDoctor = req.headers['isdoctor'] === 'true';
@@ -268,7 +291,7 @@ const mostrarCitas = async (req, res) => {
   }
   
   try {
-    const citas = await CitaModelo.find().populate();
+    const citas = await CitaModelo.find();
 
     citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
 
@@ -304,28 +327,6 @@ const mostrarCitaID = async (req, res) => {
       return res.status(401).json({ msg: error.message });
     }
     res.status(200).json({ data: citaExist, status: true });
-  } catch (error) {
-    res.status(400).json({ msg: error.message, status: false });
-  }
-};
-
-const mostrarCitasPorPaciente = async (req, res) => {
-  const { id } = req.params;
-  const isSecre = req.headers['issecre'] === 'true';
-  const isDoctor = req.headers['isdoctor'] === 'true';
-  const isPaciente = req.headers['ispaciente'] === 'true';
-
-  if (!isSecre && !isDoctor && !isPaciente) {
-    return res.status(403).json({ msg: "Acceso denegado", status: false });
-  }
-  
-  try {
-      const dates = await CitaModelo.find({
-        idPaciente: new mongoose.Types.ObjectId(id),
-      })
-        .populate("idDoctor");
-      res.status(200).json({ data: dates, status: true });
-    
   } catch (error) {
     res.status(400).json({ msg: error.message, status: false });
   }
