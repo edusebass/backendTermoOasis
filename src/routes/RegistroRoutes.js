@@ -91,7 +91,7 @@ registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del registro médico a editar
+ *         description: ID de la cita medica del paciente a buscar el registro medico
  *       - in: body
  *         name: registro
  *         description: Datos del registro médico a actualizar
@@ -99,8 +99,20 @@ registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
  *           type: object
  *           properties:
  *             receta:
- *               type: string
- *               description: Nueva receta médica
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   nombre:
+ *                     type: string
+ *                     description: Nombre del medicamento
+ *                   dosis:
+ *                     type: string
+ *                     description: Dosis del medicamento
+ *                   frecuencia:
+ *                     type: string
+ *                     description: Frecuencia de administración del medicamento
+ *               description: Lista de recetas médicas
  *             dieta:
  *               type: string
  *               description: Información de la dieta del paciente
@@ -111,7 +123,14 @@ registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
  *               type: string
  *               description: Información de los cuidados del paciente
  *             informacionMedica:
- *               type: string
+ *               type: object
+ *               properties:
+ *                 altura:
+ *                   type: number
+ *                   description: Altura del paciente en centímetros
+ *                 peso:
+ *                   type: number
+ *                   description: Peso del paciente en kilogramos
  *               description: Información médica adicional
  *             comments:
  *               type: string
