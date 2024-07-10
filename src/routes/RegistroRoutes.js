@@ -91,7 +91,7 @@ registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la cita medica del paciente a buscar el registro medico
+ *         description: ID del registro medico
  *       - in: body
  *         name: registro
  *         description: Datos del registro médico a actualizar
