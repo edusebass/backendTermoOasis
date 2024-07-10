@@ -60,8 +60,12 @@ const crearCita = async (req, res) => {
     // Verificar si start y end están en el mismo día
     if (inicioInput.toISOString().substr(0, 10) !== finInput.toISOString().substr(0, 10)) {
       throw new Error("El inicio y fin de la cita deben ser en el mismo día");
-  }
+    }
 
+    // Verificar si start y end están en el mismo año
+    if (inicioInput.getFullYear() !== new Date().getFullYear() || finInput.getFullYear() !== new Date().getFullYear()) {
+      throw new Error("El inicio y fin de la cita deben ser en el mismo año actual");
+    }
     inicioInput.setHours(inicioInput.getHours() - 5);
 
     const inicioDesde = new Date(inicioInput);
