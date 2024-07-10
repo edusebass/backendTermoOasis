@@ -76,6 +76,9 @@ const obtenerRegistroPaciente = async (req, res) => {
   try {
     const registroMedico = await RegistroMedicoModelo.findOne({ idCita: id });
 
+    if (!registroMedico) {
+      return res.status(404).json({ msg: "Registro de la cita no encontrado" });
+    }
 
     res.status(200).json({ data: registroMedico, status: true });
   } catch (error) {
