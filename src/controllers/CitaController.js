@@ -284,14 +284,15 @@ const mostrarCitas = async (req, res) => {
   const isDoctor = req.headers['isdoctor'] === 'true';
   const isPaciente = req.headers['ispaciente'] === 'true';
 
-  console.log(isSecre, isDoctor, isPaciente)
-  
   if (!isSecre && !isDoctor && !isPaciente) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
   
   try {
-    const citas = await CitaModelo.find();
+    const citas = await CitaModelo.find().populate({
+    path: 'idPaciente',
+    select: 'nombre apellido'
+  })
 
     citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
 
