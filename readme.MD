@@ -18,7 +18,6 @@ https://backend-termo-oasis.vercel.app/api-docs/
 
 - **Gestión de Citas**: APIs RESTful para crear, modificar, y cancelar citas, garantizando una programación eficiente y sin conflictos.
 - **Administración de Pacientes**: Endpoints para manejar información detallada de los pacientes, incluyendo historial médico y tratamientos.
-- **Coordinación de Terapeutas**: APIs para asignar y gestionar sesiones de terapia, asegurando que los terapeutas tengan acceso a sus horarios y responsabilidades.
 - **Notificaciones**: Integración para enviar recordatorios automáticos a los pacientes sobre sus próximas citas y cualquier cambio en la programación.
 
 ### Tecnologías utilizadas:
@@ -33,7 +32,20 @@ TERMO OASIS está diseñado para proporcionar una base sólida y escalable que f
 
 ## Ejecucion del proyecto
 
-- Primero, crear un archivo .env y poner las siguientes variables de entorno
+- Clonar el repositorio
+
+```
+git clone https://github.com/edusebass/backendTermoOasis.git
+
+```
+
+- Instalar las dependencias
+
+```
+npm install
+```
+
+- Despues, crear un archivo .env y poner las siguientes variables de entorno
 
 ```
 MONGODB_URI="url de mongodb"
@@ -46,12 +58,6 @@ PASS_MAILTRAP="clave de aplicacion del administrador"
 JWT_SECRET="aqui poner alguna palabra secreta"
 
 URL_FRONTEND="url donde este el frontend"
-```
-
-- Instalar las dependencias
-
-```
-npm install
 ```
 
 - Ejecutar el servidor
