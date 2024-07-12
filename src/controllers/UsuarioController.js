@@ -4,10 +4,14 @@ import mongoose from "mongoose";
 import { emailMailRecuperarPassword, emailMailRecuperarPasswordMovil } from "../config/nodemailer.js";
 import UsuarioModelo from "../models/Usuario.js";
 import { generateRandomPassword } from "../helpers/generadorPassword.js";
+import { validarPassword } from "../utils/validarPassword.js";
 
 const registro = async (req,res)=>{
     const {email,password} = req.body
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+    if (!validarPassword(password)) {
+        return res.status(400).json({ msg: "La contraseña debe tener al menos 8 caracteres, contener al menos una letra mayúscula, un número y un carácter especial" });
+    }
     const verificarEmailBDD = await Usuario.findOne({email})
     if(verificarEmailBDD) return res.status(400).json({msg:"Lo sentimos, el email ya se encuentra registrado"})
     const nuevoUsuario = new Usuario(req.body)
