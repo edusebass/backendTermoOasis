@@ -291,7 +291,7 @@ const mostrarCitas = async (req, res) => {
   try {
     const citas = await CitaModelo.find().populate({
     path: 'idPaciente',
-    select: 'nombre apellido'
+    select: 'nombre apellido password'
   })
 
     citas.sort((date1, date2) => date2.updatedAt - date1.updatedAt);
