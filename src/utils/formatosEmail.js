@@ -50,13 +50,13 @@ export const formatoEmailRecuperarPassword = (token) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>RESTABLECE TU password</h1>
+                    <h1>RESTABLECE TU CONTRASEÑA</h1>
                 </div>
                 <div class="content">
                     <p>Saludos,</p>
-                    <p>Para restablecer tu password porfavor ingresa al siguiente enlace:</p>
+                    <p>Para restablecer tu contraseña, por favor ingresa al siguiente enlace:</p>
                     <hr>
-                    <a href=${process.env.URL_FRONTEND}restablecerPass/${token}>Click aqui<a>
+                    <a href=${process.env.URL_FRONTEND}restablecerPass/${token}>Haz click aqui<a>
                 </div>
                 <div class="footer">
                     <p>&copy; 2024 TERMO OASIS. Todos los derechos reservados.</p>
@@ -115,11 +115,11 @@ export const formatoEmailRecuperarPasswordMovil = (password) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>RESTABLECE TU password</h1>
+                    <h1>RESTABLECE TU CONTRASEÑA</h1>
                 </div>
                 <div class="content">
                     <p>Saludos,</p>
-                    <p>Esta es tu nueva password:</p>
+                    <p>Esta es tu nueva password: </p>
                     <hr>
                     <p>${password}<p/>
                 </div>
@@ -181,15 +181,15 @@ export const formatoEmailCreacionCita = (cita) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Asignacion de cita</h1>
+                    <h1>Asignación de cita</h1>
                 </div>
                 <div class="content">
                     <p>Saludos,</p>
                     <p> Te han asignado una fecha para el ${formattedDate} </p>
-                    <p> Porfavor, asistir puntualmente</p>
+                    <p> Por favor, asistir puntualmente</p>
                     <hr>
                     <p> Además, recuerda que solo puedes cancelar tu cita hasta 24 horas antes</p>
-                    <p>Si tu no solicitaste este servicio, puedes ignorar este email</p>
+                    <p>Si tú no solicitaste este servicio, puedes ignorar este email</p>
                     <hr>
                 </div>
                 <div class="footer">
@@ -251,7 +251,7 @@ export const formatoEmailCancelacionCita = (cita) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Cancelacion de cita</h1>
+                    <h1>Cancelación de cita</h1>
                 </div>
                 <div class="content">
                     <p>Saludos,</p>
