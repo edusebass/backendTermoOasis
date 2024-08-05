@@ -1,18 +1,24 @@
-import { Router } from 'express'
-import verificarAutenticacion from '../middlewares/autenticacion.js'
-import{
-    login,
-    registro,
-    recuperarPassword,
-    nuevaPassword,
-    obtenerPacientes,
-    perfil,
-    comprobarTokenPassword,
-    recuperarPasswordMovil,
-    detallePaciente,
-    eliminarUsuario,
+import { Router } from "express";
+import verificarAutenticacion from "../middlewares/autenticacion.js";
+import {
+  login,
+  registro,
+  recuperarPassword,
+  nuevaPassword,
+  obtenerPacientes,
+  perfil,
+  comprobarTokenPassword,
+  recuperarPasswordMovil,
+  detallePaciente,
+  eliminarUsuario,
 } from "../controllers/UsuarioController.js";
-const usuarioRouter = Router()
+const usuarioRouter = Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Usuarios
+ *   description: Endpoints relacionados con los usuarios
 
 /**
  * @swagger
@@ -95,7 +101,7 @@ const usuarioRouter = Router()
  *       500:
  *         description: Error en el servidor
  */
-usuarioRouter.post("/login", login) 
+usuarioRouter.post("/login", login);
 
 /**
  * @swagger
@@ -160,7 +166,7 @@ usuarioRouter.post("/login", login)
  *       500:
  *         description: Error en el servidor
  */
-usuarioRouter.post("/registro", registro) 
+usuarioRouter.post("/registro", registro);
 
 /**
  * @swagger
@@ -203,7 +209,7 @@ usuarioRouter.post("/registro", registro)
  *                 msg:
  *                   type: string
  */
-usuarioRouter.post("/recuperar-password", recuperarPassword)
+usuarioRouter.post("/recuperar-password", recuperarPassword);
 
 /**
  * @swagger
@@ -289,7 +295,7 @@ usuarioRouter.get("/recuperar-password/:token", comprobarTokenPassword);
  *                 msg:
  *                   type: string
  */
-usuarioRouter.post("/nueva-password/:token", nuevaPassword)
+usuarioRouter.post("/nueva-password/:token", nuevaPassword);
 
 /**
  * @swagger
@@ -335,7 +341,7 @@ usuarioRouter.post("/nueva-password/:token", nuevaPassword)
  *                 msg:
  *                   type: string
  */
-usuarioRouter.post("/recuperar-password-movil", recuperarPasswordMovil) 
+usuarioRouter.post("/recuperar-password-movil", recuperarPasswordMovil);
 
 /**
  * @swagger
@@ -385,7 +391,7 @@ usuarioRouter.post("/recuperar-password-movil", recuperarPasswordMovil)
  *       403:
  *         description: Acceso prohibido, el token proporcionado no es válido o ha expirado.
  */
-usuarioRouter.get("/perfil", verificarAutenticacion, perfil)
+usuarioRouter.get("/perfil", verificarAutenticacion, perfil);
 
 /**
  * @swagger
@@ -461,7 +467,11 @@ usuarioRouter.get("/perfil", verificarAutenticacion, perfil)
  *       400:
  *         description: Error al intentar obtener la lista de pacientes.
  */
-usuarioRouter.get("/listar-pacientes", verificarAutenticacion, obtenerPacientes)
+usuarioRouter.get(
+  "/listar-pacientes",
+  verificarAutenticacion,
+  obtenerPacientes
+);
 
 /**
  * @swagger
@@ -543,8 +553,11 @@ usuarioRouter.get("/listar-pacientes", verificarAutenticacion, obtenerPacientes)
  *       400:
  *         description: Error al intentar obtener los detalles del paciente.
  */
-usuarioRouter.get("/detallePaciente/:id", verificarAutenticacion, detallePaciente)
-
+usuarioRouter.get(
+  "/detallePaciente/:id",
+  verificarAutenticacion,
+  detallePaciente
+);
 
 /**
  * @swagger
@@ -591,7 +604,10 @@ usuarioRouter.get("/detallePaciente/:id", verificarAutenticacion, detallePacient
  *       400:
  *         description: Error al intentar eliminar el usuario.
  */
-usuarioRouter.delete("/eliminarUsuario/:id", verificarAutenticacion, eliminarUsuario)
+usuarioRouter.delete(
+  "/eliminarUsuario/:id",
+  verificarAutenticacion,
+  eliminarUsuario
+);
 
-export default usuarioRouter
-
+export default usuarioRouter;

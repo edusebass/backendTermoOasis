@@ -1,15 +1,22 @@
-import { Router } from 'express';
-import verificarAutenticacion from '../middlewares/autenticacion.js';
+import { Router } from "express";
+import verificarAutenticacion from "../middlewares/autenticacion.js";
 import {
-    cancelarCita,
-    crearCita,
-    mostrarCitas,
-    mostrarCitaID,
-    mostrarCitasPorPaciente,
-    editarCita
+  cancelarCita,
+  crearCita,
+  mostrarCitas,
+  mostrarCitaID,
+  mostrarCitasPorPaciente,
+  editarCita,
 } from "../controllers/CitaController.js";
 
 const citaRouter = Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Citas Médicas
+ *   description: Endpoints relacionados con las citas médicas
+ */
 
 /**
  * @swagger
@@ -33,10 +40,10 @@ const citaRouter = Router();
  *             type: object
  *             properties:
  *               idPaciente:
- *                 type: ObjectId 
+ *                 type: ObjectId
  *                 description: ID del paciente
  *               idDoctor:
- *                 type: ObjectId 
+ *                 type: ObjectId
  *                 description: ID del doctor
  *               start:
  *                 type: string
@@ -483,6 +490,10 @@ citaRouter.get("/mostrar/:id", verificarAutenticacion, mostrarCitaID);
  *       '500':
  *         description: Error en el servidor
  */
-citaRouter.get("/paciente/:id", verificarAutenticacion, mostrarCitasPorPaciente);
+citaRouter.get(
+  "/paciente/:id",
+  verificarAutenticacion,
+  mostrarCitasPorPaciente
+);
 
 export default citaRouter;
