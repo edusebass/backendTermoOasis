@@ -150,6 +150,15 @@ usuarioRouter.post("/login", login);
  *               cedula:
  *                 type: string
  *                 example: "1234567890"
+ *               isPaciente:
+ *                 type: boolean
+ *                 example: true
+ *               isDoctor:
+ *                  type: boolean
+ *                  example: false
+ *               isSecre:
+ *                  type: boolean
+ *                  example: false
  *     responses:
  *       200:
  *         description: Usuario registrado correctamente
