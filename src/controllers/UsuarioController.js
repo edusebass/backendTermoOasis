@@ -6,18 +6,91 @@ import UsuarioModelo from "../models/Usuario.js";
 import { generateRandomPassword } from "../helpers/generadorPassword.js";
 import { validarPassword } from "../utils/validarPassword.js";
 
-const registro = async (req,res)=>{
-    const {email,password} = req.body
-    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
-    if (!validarPassword(password)) {
-        return res.status(400).json({ msg: "La contraseña debe tener al menos 8 caracteres, contener al menos una letra mayúscula, un número y un carácter especial" });
+const validarFechaNacimiento = (fecha) => {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!regex.test(fecha)) {
+        return false;
     }
-    const verificarEmailBDD = await Usuario.findOne({email})
-    if(verificarEmailBDD) return res.status(400).json({msg:"Lo sentimos, el email ya se encuentra registrado"})
-    const nuevoUsuario = new Usuario(req.body)
-    nuevoUsuario.password = await nuevoUsuario.encrypPassword(password)
-    await nuevoUsuario.save()
-    res.status(200).json({msg:"Usuario registrado"})
+
+    const date = new Date(fecha);
+    const timestamp = date.getTime();
+
+    if (typeof timestamp !== 'number' || Number.isNaN(timestamp)) {
+        return false;
+    }
+
+    return fecha === date.toISOString().split('T')[0];
+};
+const validarTelefono = (telefono) => {
+    const regex = /^09\d{8}$/;
+    return regex.test(telefono);
+};
+
+const validarCedula = (cedula) => {
+    const regex = /^\d{1,10}$/;
+    return regex.test(cedula);
+};
+
+const validarBooleano = (valor) => {
+    if (typeof valor === 'string') {
+        valor = valor.toLowerCase();
+        return valor === 'true' || valor === 'false';
+    }
+    return typeof valor === 'boolean';
+};
+
+const validarEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+const registro = async (req,res)=>{
+    try {
+        const {email,password, fechaNacimiento, telefono, cedula, isPaciente, isDoctor, isSecre } = req.body
+
+        if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+        if (!validarPassword(password)) {
+            return res.status(400).json({ msg: "La contraseña debe tener al menos 8 caracteres, contener al menos una letra mayúscula, un número y un carácter especial" });
+        }
+
+        if (!validarEmail(email)) {
+            return res.status(400).json({ msg: "El formato del email es inválido" });
+        }
+
+        const verificarEmailBDD = await Usuario.findOne({email})
+        if(verificarEmailBDD) return res.status(400).json({msg:"Lo sentimos, el email ya se encuentra registrado"})
+        if (!validarFechaNacimiento(fechaNacimiento)) {
+            return res.status(400).json({ msg: "La fecha de nacimiento debe estar en el formato YYYY-MM-DD y ser una fecha válida" });
+        }
+
+        if (!validarTelefono(telefono)) {
+            return res.status(400).json({ msg: "El número de teléfono debe comenzar con 09 y tener un total de 10 dígitos" });
+        }
+
+        if (!validarCedula(cedula)) {
+            return res.status(400).json({ msg: "La cédula debe contener solo números" });
+        }
+
+        if (!validarBooleano(isPaciente) || !validarBooleano(isDoctor) || !validarBooleano(isSecre)) {
+            return res.status(400).json({ msg: "Los campos isPaciente, isDoctor e isSecre deben ser booleanos" });
+        }
+
+        // Verificar campos booleanos
+    const booleanFields = { isPaciente, isDoctor, isSecre };
+    const invalidBooleanFields = Object.keys(booleanFields).filter(key => typeof booleanFields[key] !== 'boolean');
+
+    if (invalidBooleanFields.length > 0) {
+        return res.status(400).json({ msg: `Los campos ${invalidBooleanFields.join(', ')} deben ser valores booleanos (true o false)` });
+    }
+
+        const nuevoUsuario = new Usuario(req.body)
+        nuevoUsuario.password = await nuevoUsuario.encrypPassword(password)
+        await nuevoUsuario.save()
+        res.status(200).json({msg:"Usuario registrado"})
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        res.status(400).json({ msg: "Error en la solicitud", error: error.message });
+    }
 }
 const login = async(req,res)=>{
     const {email,password} = req.body

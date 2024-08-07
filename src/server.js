@@ -23,6 +23,12 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send("Server on");
 });
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+      return res.status(400).json({ msg: 'JSON inválido. Por favor, revisa el formato de tu solicitud. Revisa valores como boleanos, expresiones, llaves, corchetes o comillas' });
+  }
+  next();
+});
 
 app.use('/api', usuarioRouter); // Endpoints para usuarios
 app.use('/api/citas', citasRouter); // Endpoints para citas
