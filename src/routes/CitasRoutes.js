@@ -148,12 +148,16 @@ citaRouter.put("/cancelar/:id", verificarAutenticacion, cancelarCita);
  *             properties:
  *               start:
  *                 type: string
- *                 format: date-time
- *                 description: Nueva fecha y hora de inicio de la cita
+ *                 format: date
+ *                 description: Fecha y hora de inicio de la cita
+ *                 pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+ *                 example: "2024-08-12T11:28"
  *               end:
  *                 type: string
- *                 format: date-time
- *                 description: Nueva fecha y hora de fin de la cita
+ *                 format: date
+ *                 description: Fecha y hora de inicio de la cita
+ *                 pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+ *                 example: "2024-08-12T11:28"
  *               comentarios:
  *                 type: string
  *                 description: Nuevos comentarios para la cita
@@ -168,7 +172,7 @@ citaRouter.put("/cancelar/:id", verificarAutenticacion, cancelarCita);
  *       '401':
  *         description: Cita no encontrada
  *       '404':
- *         description: ID de cita no válido
+ *         description: Intento no valido
  *       '403':
  *         description: Acceso denegado
  *       '500':

@@ -39,14 +39,9 @@ const crearCita = async (req, res) => {
     const inicioInput = new Date(start);
     const finInput = new Date(end);
 
-    console.log("Inicio Input:", inicioInput);
-    console.log("Fin Input:", finInput);
-
     if (inicioInput < new Date() || finInput < new Date()) {
       return res.status(400).json({ msg: "No puedes agendar citas en el pasado", status: false });
     }
-
-    
 
     if (inicioInput.getTime() === finInput.getTime()) {
       return res.status(400).json({ msg: "Debes elegir un horario de inicio y fin diferente", status: false });
@@ -56,7 +51,7 @@ const crearCita = async (req, res) => {
     if (diferenciaHoras < 1) {
       return res.status(400).json({ msg: "La diferencia entre la hora de inicio y fin debe ser de al menos una hora", status: false });
     }
-    
+
     if (diferenciaHoras !== 1) {
       return res.status(400).json({ msg: "La cita debe durar exactamente una hora", status: false });
     }
@@ -73,12 +68,12 @@ const crearCita = async (req, res) => {
       return res.status(400).json({ msg: "El inicio y fin de la cita deben ser en el mismo año actual", status: false });
     }
 
-    // Verificar si hay conflictos con otras citas
+    // Verificar si hay conflictos con otras citas, permitiendo un minuto de superposición
     const existingCita = await CitaModelo.findOne({
       $or: [
         {
-          start: { $lt: endDateStr },
-          end: { $gt: startDateStr }
+          start: { $lt: new Date(new Date(endDateStr).getTime() + 60000).toISOString() }, // Permitir un minuto después de end
+          end: { $gt: new Date(new Date(startDateStr).getTime() - 60000).toISOString() } // Permitir un minuto antes de start
         },
         {
           start: { $lte: startDateStr },
@@ -90,8 +85,6 @@ const crearCita = async (req, res) => {
         }
       ]
     });
-
-    console.log("Existing Cita:", existingCita);
 
     if (existingCita) {
       return res.status(400).json({ msg: "Ya existe una cita en ese horario!", status: false });
@@ -138,9 +131,6 @@ const crearCita = async (req, res) => {
 };
 
 
-
-
-
 const editarCita = async (req, res) => {
   const { id } = req.params;
   const isSecre = req.headers['issecre'] === 'true';
@@ -152,11 +142,17 @@ const editarCita = async (req, res) => {
       return res.status(403).json({ msg: "Acceso denegado", status: false });
     }
 
-    const startISO = req.body.start; 
-    const endISO = req.body.end; 
+    if (!cita) {
+      const error = new Error("Cita no encontrada");
+      return res.status(404).json({ msg: error.message, status: false });
+    }
+
+    const { start: startISO, end: endISO, comentarios, isCancelado } = req.body;
 
     let inicioInput = new Date(startISO);
     let finInput = new Date(endISO);
+
+    // Verificar si las fechas de inicio y fin están en el pasado
     if (inicioInput < new Date() || finInput < new Date()) {
       const error = new Error("No puedes reagendar citas en el pasado");
       return res.status(400).json({ msg: error.message, status: false });
@@ -168,70 +164,94 @@ const editarCita = async (req, res) => {
       return res.status(400).json({ msg: error.message, status: false });
     }
 
-    // Verificar si la diferencia entre las fechas es menor a una hora
+    // Verificar si la diferencia entre las fechas es exactamente una hora
     const diferenciaHoras = (finInput.getTime() - inicioInput.getTime()) / (1000 * 60 * 60);
-    if (diferenciaHoras < 1) {
-      const error = new Error("La diferencia entre la hora de inicio y fin debe ser de al menos una hora, en el mismo dia y en el mismo mes");
+    if (diferenciaHoras !== 1) {
+      const error = new Error("La cita debe durar exactamente una hora");
       return res.status(400).json({ msg: error.message, status: false });
     }
 
     // Verificar si start y end están en el mismo día
     if (inicioInput.toISOString().substr(0, 10) !== finInput.toISOString().substr(0, 10)) {
-      throw new Error("El inicio y fin de la cita deben ser en el mismo día");
+      const error = new Error("El inicio y fin de la cita deben ser en el mismo día");
+      return res.status(400).json({ msg: error.message, status: false });
     }
 
     // Verificar si start y end están en el mismo año
     if (inicioInput.getFullYear() !== new Date().getFullYear() || finInput.getFullYear() !== new Date().getFullYear()) {
-      throw new Error("El inicio y fin de la cita deben ser en el mismo año actual");
-    }
-
-    if (!cita) {
-      const error = new Error("Cita no encontrada");
-      return res.status(401).json({ msg: error.message });
-    } else if (cita){
-      const citaAnterior = cita.start 
-      cita.start = req.body.start || cita.start;
-      cita.end = req.body.end || cita.end;
-      cita.comentarios = req.body.comentarios || cita.comentarios;
-      cita.isCancelado = req.body.isCancelado || cita.isCancelado;
-      const citastored = await cita.save();
-
-      const existPaciente = await UsuarioModelo.find({
-        _id: cita.idPaciente,
-        isPaciente: true,
-      });
-      const existDoctor = await UsuarioModelo.find({
-        _id: cita.idDoctor,
-        isDoctor: true
-      });
-
-      if (!existPaciente[0]) {
-        const error = new Error("Paciente no registrado");
-        return res.status(400).json({ msg: error.message, status: false });
-      }
-
-      if (!existDoctor[0]) {
-        const error = new Error("Especialista no registrado");
-        return res.status(400).json({ msg: error.message, status: false });
-      }
-
-      emailActualizarCita({
-        fechaAnterior: citaAnterior,
-        firstname: existPaciente[0].nombre,
-        email: existPaciente[0].email,
-        especialistemail: existDoctor[0].email,
-        cita
-      });
-
-      res.status(200).json({ response:"Cita actualizada exitosamente" ,msg: citastored, status: true });
-    } else {
-      const error = new Error("Usuario no autorizado para esta accion");
+      const error = new Error("El inicio y fin de la cita deben ser en el mismo año actual");
       return res.status(400).json({ msg: error.message, status: false });
     }
+
+    // Verificar si hay conflictos con otras citas
+    const existingCita = await CitaModelo.findOne({
+      $or: [
+        {
+          _id: { $ne: id },
+          start: { $lt: endISO },
+          end: { $gt: startISO }
+        },
+        {
+          _id: { $ne: id },
+          start: { $lte: startISO },
+          end: { $gte: endISO }
+        },
+        {
+          _id: { $ne: id },
+          start: { $lte: startISO },
+          end: { $gte: startISO }
+        }
+      ]
+    });
+
+    if (existingCita) {
+      const error = new Error("Ya existe una cita en ese horario!");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
+
+    // Actualizar la cita en la base de datos
+    const citaAnterior = cita.start;
+    cita.start = startISO || cita.start;
+    cita.end = endISO || cita.end;
+    cita.comentarios = comentarios || cita.comentarios;
+    cita.isCancelado = isCancelado || cita.isCancelado;
+    const citastored = await cita.save();
+
+    // Verificar la existencia de paciente y doctor
+    const existPaciente = await UsuarioModelo.findOne({
+      _id: cita.idPaciente,
+      isPatient: true,
+    });
+    const existDoctor = await UsuarioModelo.findOne({
+      _id: cita.idDoctor,
+      isDoctor: true
+    });
+
+    if (!existPaciente) {
+      const error = new Error("Paciente no registrado");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
+
+    if (!existDoctor) {
+      const error = new Error("Especialista no registrado");
+      return res.status(400).json({ msg: error.message, status: false });
+    }
+
+    // Enviar el correo electrónico de actualización de cita
+    emailActualizarCita({
+      fechaAnterior: citaAnterior,
+      firstname: existPaciente.nombre,
+      email: existPaciente.email,
+      especialistemail: existDoctor.email,
+      cita
+    });
+
+    res.status(200).json({ response: "Cita actualizada exitosamente", msg: citastored, status: true });
   } catch (error) {
-    res.status(404).json({ msg: "El id que ingresaste no es valido" });
+    res.status(404).json({ msg: "El intento no es valido" });
   }
 };
+
 
 const mostrarCitasPorPaciente = async (req, res) => {
   const { id } = req.params;
