@@ -14,112 +14,132 @@ const crearCita = async (req, res) => {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
 
-  if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+  if (Object.values(req.body).includes("")) {
+    return res.status(400).json({ msg: "Lo sentimos, debes llenar todos los campos" });
+  }
 
   try {
-    const existePaciente = await UsuarioModelo.find({
+    const existePaciente = await UsuarioModelo.findOne({
       _id: idPaciente,
       isPatient: true,
     });
-    const existeDoctor = await UsuarioModelo.find({
+    const existeDoctor = await UsuarioModelo.findOne({
       _id: idDoctor,
       isDoctor: true,
     });
-    if (!existePaciente[0]) {
-      const error = new Error("Paciente no se encuentra registrado");
-      return res.status(400).json({ msg: error.message, status: false });
+
+    if (!existePaciente) {
+      return res.status(400).json({ msg: "Paciente no se encuentra registrado", status: false });
     }
-    if (!existeDoctor[0]) {
-      const error = new Error("Doctor no se encuentra registrado");
-      return res.status(400).json({ msg: error.message, status: false });
+    if (!existeDoctor) {
+      return res.status(400).json({ msg: "Doctor no se encuentra registrado", status: false });
     }
 
-    const startISO = req.body.start; 
-    const endISO = req.body.end; 
+    // Verificar el formato de fecha
+    const inicioInput = new Date(start);
+    const finInput = new Date(end);
 
-    let inicioInput = new Date(startISO);
-    let finInput = new Date(endISO);
+    console.log("Inicio Input:", inicioInput);
+    console.log("Fin Input:", finInput);
+
     if (inicioInput < new Date() || finInput < new Date()) {
-      const error = new Error("No puedes agendar citas en el pasado");
-      return res.status(400).json({ msg: error.message, status: false });
+      return res.status(400).json({ msg: "No puedes agendar citas en el pasado", status: false });
     }
 
-    // Verificar si las fechas de inicio y fin son iguales
+    
+
     if (inicioInput.getTime() === finInput.getTime()) {
-      const error = new Error("Debes elegir un horario de inicio y fin diferente");
-      return res.status(400).json({ msg: error.message, status: false });
+      return res.status(400).json({ msg: "Debes elegir un horario de inicio y fin diferente", status: false });
     }
 
-    // Verificar si la diferencia entre las fechas es menor a una hora
     const diferenciaHoras = (finInput.getTime() - inicioInput.getTime()) / (1000 * 60 * 60);
     if (diferenciaHoras < 1) {
-      const error = new Error("La diferencia entre la hora de inicio y fin debe ser de al menos una hora, en el mismo dia y en el mismo mes");
-      return res.status(400).json({ msg: error.message, status: false });
+      return res.status(400).json({ msg: "La diferencia entre la hora de inicio y fin debe ser de al menos una hora", status: false });
+    }
+    
+    if (diferenciaHoras !== 1) {
+      return res.status(400).json({ msg: "La cita debe durar exactamente una hora", status: false });
     }
 
-    // Verificar si start y end están en el mismo día
-    if (inicioInput.toISOString().substr(0, 10) !== finInput.toISOString().substr(0, 10)) {
-      throw new Error("El inicio y fin de la cita deben ser en el mismo día");
+    const startDateStr = start;
+    const endDateStr = end;
+
+    if (startDateStr.substr(0, 10) !== endDateStr.substr(0, 10)) {
+      return res.status(400).json({ msg: "El inicio y fin de la cita deben ser en el mismo día", status: false });
     }
 
-    // Verificar si start y end están en el mismo año
-    if (inicioInput.getFullYear() !== new Date().getFullYear() || finInput.getFullYear() !== new Date().getFullYear()) {
-      throw new Error("El inicio y fin de la cita deben ser en el mismo año actual");
+    const currentYear = new Date().getFullYear();
+    if (new Date(startDateStr).getFullYear() !== currentYear || new Date(endDateStr).getFullYear() !== currentYear) {
+      return res.status(400).json({ msg: "El inicio y fin de la cita deben ser en el mismo año actual", status: false });
     }
-    inicioInput.setHours(inicioInput.getHours() - 5);
 
-    const inicioDesde = new Date(inicioInput);
-    inicioDesde.setMinutes(inicioDesde.getMinutes() - 1);
-
-    const inicioHasta = new Date(inicioInput);
-    inicioHasta.setMinutes(inicioHasta.getMinutes() + 1);
-
+    // Verificar si hay conflictos con otras citas
     const existingCita = await CitaModelo.findOne({
-      start: {
-        $gte: inicioDesde.toISOString(),
-        $lte: inicioHasta.toISOString()
-      }
+      $or: [
+        {
+          start: { $lt: endDateStr },
+          end: { $gt: startDateStr }
+        },
+        {
+          start: { $lte: startDateStr },
+          end: { $gte: endDateStr }
+        },
+        {
+          start: { $lte: startDateStr },
+          end: { $gte: startDateStr }
+        }
+      ]
     });
+
+    console.log("Existing Cita:", existingCita);
 
     if (existingCita) {
       return res.status(400).json({ msg: "Ya existe una cita en ese horario!", status: false });
-    } else {
-      const cita = new CitaModelo({
-        idPaciente,
-        idDoctor,
-        start,
-        end,
-        comentarios,
-        registroMedico: null, 
-      });
-      await cita.save();
-
-      existePaciente[0].citas.push(cita._id);
-      await existePaciente[0].save();
-
-      existeDoctor[0].citas.push(cita._id);
-      existeDoctor[0].pacientes.push(idPaciente);
-      await existeDoctor[0].save();
-
-      enviarEmailCita({
-        nombrePaciente: existePaciente[0].nombre,
-        email: existePaciente[0].email,
-        emailDoctor: existeDoctor[0].email,
-        cita: cita
-      });
-
-      const fullCita = await CitaModelo.findById(cita._id)
-        .populate("idDoctor")
-        .populate("idPaciente")
-        .populate("registroMedico")
-
-      res.status(200).json({ msg: "Cita agendada correctamente", status: true, data: fullCita });
     }
+
+    // Guardar la nueva cita
+    const cita = new CitaModelo({
+      idPaciente,
+      idDoctor,
+      start,
+      end,
+      comentarios,
+      registroMedico: null,
+    });
+    await cita.save();
+
+    // Actualizar los registros de paciente y doctor
+    existePaciente.citas.push(cita._id);
+    await existePaciente.save();
+
+    existeDoctor.citas.push(cita._id);
+    existeDoctor.pacientes.push(idPaciente);
+    await existeDoctor.save();
+
+    // Enviar el correo electrónico
+    enviarEmailCita({
+      nombrePaciente: existePaciente.nombre,
+      email: existePaciente.email,
+      emailDoctor: existeDoctor.email,
+      cita: cita
+    });
+
+    // Obtener la cita completa con las referencias pobladas
+    const fullCita = await CitaModelo.findById(cita._id)
+      .populate("idDoctor")
+      .populate("idPaciente")
+      .populate("registroMedico");
+
+    res.status(200).json({ msg: "Cita agendada correctamente", status: true, data: fullCita });
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ msg: error.message, status: false });
   }
 };
+
+
+
+
 
 const editarCita = async (req, res) => {
   const { id } = req.params;

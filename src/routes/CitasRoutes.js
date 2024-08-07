@@ -47,12 +47,16 @@ const citaRouter = Router();
  *                 description: ID del doctor
  *               start:
  *                 type: string
- *                 format: date-time
+ *                 format: date
  *                 description: Fecha y hora de inicio de la cita
+ *                 pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+ *                 example: "2024-08-12T11:28"
  *               end:
  *                 type: string
  *                 format: date-time
  *                 description: Fecha y hora de fin de la cita
+ *                 pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+ *                 example: "2024-08-12T12:28"
  *               comentarios:
  *                 type: string
  *                 description: Comentarios adicionales para la cita
