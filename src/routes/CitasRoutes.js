@@ -31,7 +31,7 @@ const citaRouter = Router();
  *         required: true
  *         schema:
  *           type: string
- *         description: Indica si el usuario es secretario
+ *         description: Indica si el usuario es secretario (true o false)
  *     requestBody:
  *       required: true
  *       content:
@@ -68,6 +68,8 @@ const citaRouter = Router();
  *         description: Error en la solicitud
  *       '403':
  *         description: Acceso denegado
+ *       '404':
+ *         description: Debes proporcionar un token
  *       '500':
  *         description: Error en el servidor
  */

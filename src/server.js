@@ -7,6 +7,7 @@ import citasRouter from './routes/CitasRoutes.js';
 import registroRouter from './routes/RegistroRoutes.js';
 import swaggerUI from 'swagger-ui-express';
 import swaggerSpec from './utils/swagger.js'; 
+import swaggerJSDoc from 'swagger-jsdoc';
 
 // Inicializaciones
 const app = express();
@@ -40,7 +41,10 @@ app.use('/api-docs', swaggerUI.serve,
       customCss:
         '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
       customCssUrl: CSS_URL,
-    },
+      swaggerOptions: {
+        persistAuthorization: true, // Activa la persistencia de autorización
+      }
+    }
 ));
 
 // Manejo de una ruta que no sea encontrada

@@ -209,7 +209,7 @@ usuarioRouter.post("/registro", registro);
  *                 tokenPassword:
  *                   type: string
  *       404:
- *         description: Error si algún campo está vacío o el usuario no está registrado.
+ *         description: Error si algún campo está vacío,el usuario no está registrado o formato de correo no valido.
  *         content:
  *           application/json:
  *             schema:
@@ -415,13 +415,13 @@ usuarioRouter.get("/perfil", verificarAutenticacion, perfil);
  *         required: true
  *         schema:
  *           type: string
- *         description: Indica si el usuario es secretario
+ *         description: Indica si el usuario es secretario (true o false)
  *       - name: isdoctor
  *         in: header
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de doctor/a.
+ *         description: Indica si el usuario tiene el rol de doctor (true o false).
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -503,19 +503,19 @@ usuarioRouter.get(
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de secretario/a.
+ *         description: Indica si el usuario tiene el rol de secretario (true o false).
  *       - name: isdoctor
  *         in: header
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de doctor/a.
+ *         description: Indica si el usuario tiene el rol de doctor (true o false).
  *       - name: ispaciente
  *         in: header
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de paciente.
+ *         description: Indica si el usuario tiene el rol de paciente (true o false).
  *     responses:
  *       200:
  *         description: Detalles del paciente obtenidos correctamente.
@@ -589,7 +589,7 @@ usuarioRouter.get(
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de secretario/a.
+ *         description: Indica si el usuario tiene el rol de secretario (true o false).
  *     responses:
  *       200:
  *         description: Usuario eliminado correctamente.

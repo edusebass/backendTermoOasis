@@ -95,6 +95,9 @@ const registro = async (req,res)=>{
 const login = async(req,res)=>{
     const {email,password} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
+    if (!validarEmail(email)) {
+        return res.status(400).json({ msg: "El formato del email es inválido" });
+    }
     const usuarioBDD = await Usuario.findOne({email})
     if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
     const verificarcontraseña = await usuarioBDD.matchPassword(password)
@@ -123,7 +126,7 @@ const recuperarPassword = async(req,res)=>{
     const {email} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
     const usuarioBDD = await Usuario.findOne({email})
-    if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
+    if(!usuarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado o formato de correo incorrecto"})
     const token = usuarioBDD.crearToken()
     usuarioBDD.token = token
     await emailMailRecuperarPassword(email, token)
@@ -146,7 +149,7 @@ const nuevaPassword = async (req,res)=>{
     const{password, confirmPassword} = req.body
     if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
     if(password != confirmPassword) return res.status(404).json({msg:"Lo sentimos, los contraseñas no coinciden"})
-
+    if(!validarPassword(password)) return res.status(404).json({msg:"La contrasena debe tener al menos 6 caracteres, numeros y maysuculas"})
     const usuarioBDD = await Usuario.findOne({token:req.params.token})
     if(usuarioBDD?.token !== req.params.token) return res.status(404).json({msg:"Lo sentimos, no se puede validar la cuenta"})
     usuarioBDD.token = null
@@ -160,6 +163,10 @@ const recuperarPasswordMovil = async (req, res) => {
 
     if (Object.values(req.body).includes("")) {
         return res.status(404).json({ msg: "Lo sentimos, debes llenar todos los campos" });
+    }
+
+    if(!validarEmail(email)) {
+        return res.status(400).json({ msg: "El formato del email es inválido" });
     }
 
     const usuarioBDD = await Usuario.findOne({ nombre, apellido, email });
