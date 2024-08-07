@@ -44,13 +44,26 @@ const validarEmail = (email) => {
     return emailRegex.test(email);
 };
 
+function validarNombreApellido(campo) {
+    const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    return regex.test(campo);
+}
+
 const registro = async (req,res)=>{
     try {
-        const {email,password, fechaNacimiento, telefono, cedula, isPaciente, isDoctor, isSecre } = req.body
+        const {nombre, apellido, email,password, fechaNacimiento, telefono, cedula, isPaciente, isDoctor, isSecre } = req.body
 
         if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
         if (!validarPassword(password)) {
             return res.status(400).json({ msg: "La contraseña debe tener al menos 8 caracteres, contener al menos una letra mayúscula, un número y un carácter especial" });
+        }
+
+        if (!validarNombreApellido(nombre)) {
+            return res.status(400).json({ msg: "El nombre no debe contener números" });
+        }
+        
+        if (!validarNombreApellido(apellido)) {
+            return res.status(400).json({ msg: "El apellido no debe contener números" });
         }
 
         if (!validarEmail(email)) {
