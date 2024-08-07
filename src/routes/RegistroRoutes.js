@@ -18,34 +18,40 @@ const registroRouter = Router();
  *     description: Crea un nuevo registro médico para un paciente, asociado a una cita y a un doctor.
  *     tags: [Registros Médicos]
  *     parameters:
- *       - name: isdoctor
- *         in: header
+ *       - in: header
+ *         name: isdoctor
  *         schema:
  *           type: string
  *         required: true
+ *         description: Indica si el usuario que realiza la solicitud es un secretario(true o false)
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - idPaciente
- *               - idDoctor
- *               - idCita
  *             properties:
- *               idPaciente:
- *                 type: string
- *                 description: ID del paciente
  *               idDoctor:
- *                 type: string
- *                 description: ID del doctor
+ *                  type: string
  *               idCita:
- *                 type: string
- *                 description: ID de la cita
+ *                  type: string
+ *               idPaciente:
+ *                  type: string
  *               receta:
- *                 type: string
- *                 description: Receta médica
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     nombre:
+ *                       type: string
+ *                       description: Nombre del medicamento
+ *                     dosis:
+ *                       type: string
+ *                       description: Dosis del medicamento
+ *                     frecuencia:
+ *                       type: string
+ *                       description: Frecuencia de administración del medicamento
+ *                 description: Lista de recetas médicas
  *               dieta:
  *                 type: string
  *                 description: Información de la dieta del paciente
@@ -56,7 +62,14 @@ const registroRouter = Router();
  *                 type: string
  *                 description: Información de los cuidados del paciente
  *               informacionMedica:
- *                 type: string
+ *                 type: object
+ *                 properties:
+ *                   altura:
+ *                     type: number
+ *                     description: Altura del paciente en centímetros
+ *                   peso:
+ *                     type: number
+ *                     description: Peso del paciente en kilogramos
  *                 description: Información médica adicional
  *               comments:
  *                 type: string
@@ -69,6 +82,7 @@ const registroRouter = Router();
  *       500:
  *         description: Error interno del servidor
  */
+
 registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
 
 /**
@@ -78,63 +92,63 @@ registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
  *     summary: Editar un registro médico por ID
  *     description: Actualiza los campos de un registro médico existente por su ID.
  *     tags: [Registros Médicos]
- * 
  *     parameters:
  *       - in: header
  *         name: isdoctor
  *         required: true
  *         schema:
  *           type: string
- *         description: Indica si el usuario que realiza la solicitud es un secretario/a
+ *         description: Indica si el usuario que realiza la solicitud es un secretario (true o false)
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la cita medica
- *       - in: body
- *         name: registro
- *         description: Datos del registro médico a actualizar
- *         schema:
- *           type: object
- *           properties:
- *             receta:
- *               type: array
- *               items:
+ *         description: ID del registro médico
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               receta:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     nombre:
+ *                       type: string
+ *                       description: Nombre del medicamento
+ *                     dosis:
+ *                       type: string
+ *                       description: Dosis del medicamento
+ *                     frecuencia:
+ *                       type: string
+ *                       description: Frecuencia de administración del medicamento
+ *                 description: Lista de recetas médicas
+ *               dieta:
+ *                 type: string
+ *                 description: Información de la dieta del paciente
+ *               actividad:
+ *                 type: string
+ *                 description: Información de la actividad física del paciente
+ *               cuidados:
+ *                 type: string
+ *                 description: Información de los cuidados del paciente
+ *               informacionMedica:
  *                 type: object
  *                 properties:
- *                   nombre:
- *                     type: string
- *                     description: Nombre del medicamento
- *                   dosis:
- *                     type: string
- *                     description: Dosis del medicamento
- *                   frecuencia:
- *                     type: string
- *                     description: Frecuencia de administración del medicamento
- *               description: Lista de recetas médicas
- *             dieta:
- *               type: string
- *               description: Información de la dieta del paciente
- *             actividad:
- *               type: string
- *               description: Información de la actividad física del paciente
- *             cuidados:
- *               type: string
- *               description: Información de los cuidados del paciente
- *             informacionMedica:
- *               type: object
- *               properties:
- *                 altura:
- *                   type: number
- *                   description: Altura del paciente en centímetros
- *                 peso:
- *                   type: number
- *                   description: Peso del paciente en kilogramos
- *               description: Información médica adicional
- *             comments:
- *               type: string
- *               description: Comentarios adicionales
+ *                   altura:
+ *                     type: number
+ *                     description: Altura del paciente en centímetros
+ *                   peso:
+ *                     type: number
+ *                     description: Peso del paciente en kilogramos
+ *                 description: Información médica adicional
+ *               comments:
+ *                 type: string
+ *                 description: Comentarios adicionales
  *     responses:
  *       200:
  *         description: Registro médico actualizado exitosamente
@@ -143,6 +157,7 @@ registroRouter.post("/crear", verificarAutenticacion, crearRegistro);
  *       500:
  *         description: Error interno del servidor
  */
+
 registroRouter.put("/editar/:id", verificarAutenticacion, editarRegistro);
 
 /**
@@ -158,19 +173,19 @@ registroRouter.put("/editar/:id", verificarAutenticacion, editarRegistro);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del registro médico del paciente
+ *         description: ID de la cita
  *       - in: header
  *         name: issecre
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario es secretaria
+ *         description: Indica si el usuario es secretaria (true o false)
  *       - in: header
  *         name: isdoctor
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario es doctor
+ *         description: Indica si el usuario es doctor (true o false)
  *     responses:
  *       '200':
  *         description: Registro médico obtenido correctamente
