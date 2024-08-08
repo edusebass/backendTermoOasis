@@ -54,6 +54,11 @@ const registro = async (req,res)=>{
         const {nombre, apellido, email,password, fechaNacimiento, telefono, cedula, isPaciente, isDoctor, isSecre } = req.body
 
         if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+
+        if (!nombre || !apellido || !email || !password || !fechaNacimiento || !telefono || !cedula || isPaciente === undefined || isDoctor === undefined || isSecre === undefined) {
+            return res.status(400).json({ msg: "Lo sentimos, debes poner todos los campos en el body" });
+        }
+
         if (!validarPassword(password)) {
             return res.status(400).json({ msg: "La contraseña debe tener al menos 8 caracteres, contener al menos una letra mayúscula, un número y un carácter especial" });
         }
@@ -86,6 +91,13 @@ const registro = async (req,res)=>{
 
         if (!validarBooleano(isPaciente) || !validarBooleano(isDoctor) || !validarBooleano(isSecre)) {
             return res.status(400).json({ msg: "Los campos isPaciente, isDoctor e isSecre deben ser booleanos" });
+        }
+
+        const roles = [isPaciente, isDoctor, isSecre];
+        const rolesVerdaderos = roles.filter(rol => rol === true);
+
+        if (rolesVerdaderos.length !== 1) {
+            return res.status(400).json({ msg: "Solo uno de los roles (isPaciente, isDoctor, isSecre) puede ser verdadero" });
         }
 
         // Verificar campos booleanos
