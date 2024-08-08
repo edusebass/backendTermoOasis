@@ -3,6 +3,7 @@ import generarJWT from "../helpers/crearJWT.js"
 import mongoose from "mongoose";
 import { emailMailRecuperarPassword, emailMailRecuperarPasswordMovil } from "../config/nodemailer.js";
 import UsuarioModelo from "../models/Usuario.js";
+import CitaModelo from "../models/Citas.js";
 import { generateRandomPassword } from "../helpers/generadorPassword.js";
 import { validarPassword } from "../utils/validarPassword.js";
 
@@ -237,6 +238,19 @@ const eliminarUsuario = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ msg: `Lo sentimos, no existe el usuario con ID ${id}` });
     }
+    const usuario = await Usuario.findById(id);
+    if (!usuario) {
+        return res.status(404).json({ msg: `Lo sentimos, no se pudo encontrar el usuario con ID ${id}` });
+    }
+
+    if (usuario.isPaciente && !usuario.isDoctor && !usuario.isSecre) {
+        if (usuario.citas && usuario.citas.length > 0) {
+            return res.status(400).json({ msg: "No se puede eliminar el usuario porque tiene citas asociadas" });
+        }
+    } else {
+        return res.status(400).json({ msg: "Solo se pueden eliminar usuarios con el rol de paciente" });
+    }
+
     const usuarioEliminado = await Usuario.findByIdAndDelete(id);
 
     if (!usuarioEliminado) {
