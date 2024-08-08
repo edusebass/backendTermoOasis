@@ -150,6 +150,8 @@ const editarCita = async (req, res) => {
   console.log(id)
   
   try {
+    
+
     const cita = await CitaModelo.findById(id);
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 
@@ -170,6 +172,10 @@ const editarCita = async (req, res) => {
   
     if (comentarios.length > 50) {
       return res.status(400).json({ msg: "El comentario no debe exceder los 30 caracteres", status: false });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "El ID no es válido no pertenece a mongoDB", status: false });
     }
 
     let inicioInput = new Date(startISO);
@@ -282,6 +288,10 @@ const mostrarCitasPorPaciente = async (req, res) => {
   const isDoctor = req.headers['isdoctor'] === 'true';
   const isPaciente = req.headers['ispaciente'] === 'true';
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ msg: "El ID no es válido no pertenece a mongoDB", status: false });
+  }
+
   if (!isSecre && !isDoctor && !isPaciente) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
@@ -311,6 +321,10 @@ const cancelarCita = async (req, res) => {
   }
 
   if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ msg: "El ID no es válido no pertenece a mongoDB", status: false });
+  }
 
   try {
     const cita = await CitaModelo.findById(id)
@@ -373,6 +387,11 @@ const mostrarCitaID = async (req, res) => {
   const isPaciente = req.headers['ispaciente'] === 'true';
 
   console.log(isSecre, isDoctor, isPaciente)
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ msg: "El ID no es válido no pertenece a mongoDB", status: false });
+  }
+
   
   if (!isSecre && !isDoctor && !isPaciente) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });

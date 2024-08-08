@@ -1,62 +1,103 @@
 import UsuarioModelo from "../models/Usuario.js";
 import CitaModelo from "../models/Citas.js";
 import RegistroMedicoModelo from "../models/RegistroMedico.js";
+import mongoose from "mongoose";
 
 const crearRegistro = async (req, res) => {
-  const { idPaciente, idDoctor, idCita} = req.body;
+  const { idPaciente, idDoctor, idCita, receta, dieta, actividad, cuidados, informacionMedica, comments } = req.body;
 
   const isDoctor = req.headers['isdoctor'] === 'true';
 
-  if (!isDoctor ) {
+  if (!isDoctor) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
 
   try {
-    const existPaciente = await UsuarioModelo.find({
-      _id: idPaciente,
-      isPaciente: true,
-    });
-    const existDoctor = await UsuarioModelo.find({
-      _id: idDoctor,
-      isDoctor: true ,
-    });
-
-    if (!existPaciente[0]) {
-      const error = new Error("Paciente no registrado");
-      return res.status(400).json({ msg: error.message, status: false });
+    // Verificar si los IDs son válidos
+    if (!mongoose.Types.ObjectId.isValid(idPaciente) || !mongoose.Types.ObjectId.isValid(idDoctor) || !mongoose.Types.ObjectId.isValid(idCita)) {
+      return res.status(400).json({ msg: "Uno o más IDs proporcionados no son válidos", status: false });
     }
 
-    if (!existDoctor[0]) {
-      const error = new Error("Especialista no registrado");
-      return res.status(400).json({ msg: error.message, status: false });
+    
+    // Verificar longitud de cadenas
+    if (dieta && dieta.length > 20) {
+      return res.status(400).json({ msg: "La dieta no debe exceder los 20 caracteres", status: false });
     }
 
-    const existCita = await CitaModelo.find({
-      _id: idCita,
-    });
-
-    if (!existCita[0]) {
-      const error = new Error("Cita no registrada");
-      return res.status(400).json({ msg: error.message, status: false });
+    if (actividad && actividad.length > 20) {
+      return res.status(400).json({ msg: "La actividad no debe exceder los 20 caracteres", status: false });
     }
-    console.log(existCita[0])
+
+    if (cuidados && cuidados.length > 20) {
+      return res.status(400).json({ msg: "Los cuidados no deben exceder los 20 caracteres", status: false });
+    }
+
+    if (comments && comments.length > 20) {
+      return res.status(400).json({ msg: "Los comentarios no deben exceder los 20 caracteres", status: false });
+    }
+
+    // Verificar información médica
+    if (Array.isArray(receta)) {
+      for (const item of receta) {
+        if (item.nombre && item.nombre.length > 20) {
+          return res.status(400).json({ msg: "El nombre en la receta no debe exceder los 20 caracteres", status: false });
+        }
+
+        if (item.dosis && item.dosis.length > 20) {
+          return res.status(400).json({ msg: "La dosis en la receta no debe exceder los 20 caracteres", status: false });
+        }
+
+        if (item.frecuencia && item.frecuencia.length > 20) {
+          return res.status(400).json({ msg: "La frecuencia en la receta no debe exceder los 20 caracteres", status: false });
+        }
+      }
+    }else {
+      return res.status(400).json({ msg: "La receta debe ser un arreglo", status: false });
+    }
+
+    if (informacionMedica && Array.isArray(informacionMedica)) {
+      const { altura, peso } = informacionMedica;
+
+      if (typeof altura !== 'number' || typeof peso !== 'number') {
+        return res.status(400).json({ msg: "La altura y el peso deben ser números", status: false });
+      }
+
+      // Verificar que sean decimales con una sola cifra decimal
+      if (!/^(\d+(\.\d{2})?)$/.test(altura) || !/^(\d+(\.\d{2})?)$/.test(peso)) {
+        return res.status(400).json({ msg: "La altura y el peso deben ser números decimales con dos cifras decimales", status: false });
+      }
+    }
+
+    // Verificar existencia de paciente, doctor y cita
+    const existPaciente = await UsuarioModelo.findById(idPaciente);
+    const existDoctor = await UsuarioModelo.findById(idDoctor);
+    const existCita = await CitaModelo.findById(idCita);
+
+    if (!existPaciente || !existPaciente.isPaciente) {
+      return res.status(400).json({ msg: "Paciente no registrado", status: false });
+    }
+
+    if (!existDoctor || !existDoctor.isDoctor) {
+      return res.status(400).json({ msg: "Especialista no registrado", status: false });
+    }
+
+    if (!existCita) {
+      return res.status(400).json({ msg: "Cita no registrada", status: false });
+    }
 
     // Verificar si la cita ya tiene un registro médico asociado
-    if (existCita[0].registroMedico) {
-      const error = new Error("Ya existe un registro médico para esta cita");
-      return res.status(400).json({ msg: error.message, status: false });
+    if (existCita.registroMedico) {
+      return res.status(400).json({ msg: "Ya existe un registro médico para esta cita", status: false });
     }
 
     const registro = new RegistroMedicoModelo(req.body);
 
     await registro.save();
 
-    existCita[0].registroMedico = registro._id;
-    await existCita[0].save();
+    existCita.registroMedico = registro._id;
+    await existCita.save();
 
-    res
-      .status(200)
-      .json({ msg: "Registro Medico creado Correctamente", status: true });
+    res.status(200).json({ msg: "Registro médico creado correctamente", status: true });
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ msg: error.message, status: false });
@@ -68,6 +109,10 @@ const obtenerRegistroPaciente = async (req, res) => {
   const isDoctor = req.headers['isdoctor'] === 'true';
   const isSecre = req.headers['issecre'] === 'true';
 
+ // Verificar si los IDs son válidos
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ msg: "ID proporcionado no es válido para mongoDB", status: false });
+  }
 
   if (!isDoctor && !isSecre) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
@@ -91,11 +136,69 @@ const editarRegistro = async (req, res) => {
 
   const isDoctor = req.headers['isdoctor'] === 'true';
 
+  const { receta, dieta, actividad, cuidados, informacionMedica, comments } = req.body;
+
+
   if (!isDoctor ) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
   }
 
   try {
+
+    // Verificar si los IDs son válidos
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "ID proporcionado no es válido para mongoDB", status: false });
+    }
+
+    
+    // Verificar longitud de cadenas
+    if (dieta && dieta.length > 20) {
+      return res.status(400).json({ msg: "La dieta no debe exceder los 20 caracteres", status: false });
+    }
+
+    if (actividad && actividad.length > 20) {
+      return res.status(400).json({ msg: "La actividad no debe exceder los 20 caracteres", status: false });
+    }
+
+    if (cuidados && cuidados.length > 20) {
+      return res.status(400).json({ msg: "Los cuidados no deben exceder los 20 caracteres", status: false });
+    }
+
+    if (comments && comments.length > 20) {
+      return res.status(400).json({ msg: "Los comentarios no deben exceder los 20 caracteres", status: false });
+    }
+
+    // Verificar información médica
+    if (Array.isArray(receta)) {
+      for (const item of receta) {
+        if (item.nombre && item.nombre.length > 20) {
+          return res.status(400).json({ msg: "El nombre en la receta no debe exceder los 20 caracteres", status: false });
+        }
+
+        if (item.dosis && item.dosis.length > 20) {
+          return res.status(400).json({ msg: "La dosis en la receta no debe exceder los 20 caracteres", status: false });
+        }
+
+        if (item.frecuencia && item.frecuencia.length > 20) {
+          return res.status(400).json({ msg: "La frecuencia en la receta no debe exceder los 20 caracteres", status: false });
+        }
+      }
+    }else {
+      return res.status(400).json({ msg: "La receta debe ser un arreglo", status: false });
+    }
+
+    if (informacionMedica && Array.isArray(informacionMedica)) {
+      const { altura, peso } = informacionMedica;
+
+      if (typeof altura !== 'number' || typeof peso !== 'number') {
+        return res.status(400).json({ msg: "La altura y el peso deben ser números", status: false });
+      }
+
+      // Verificar que sean decimales con una sola cifra decimal
+      if (!/^(\d+(\.\d{2})?)$/.test(altura) || !/^(\d+(\.\d{2})?)$/.test(peso)) {
+        return res.status(400).json({ msg: "La altura y el peso deben ser números decimales con dos cifras decimales", status: false });
+      }
+    }
     // Buscar el registro médico por su ID
     const registro = await RegistroMedicoModelo.findById(id);
 

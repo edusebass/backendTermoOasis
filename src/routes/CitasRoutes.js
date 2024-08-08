@@ -98,13 +98,13 @@ citaRouter.post("/registrar", verificarAutenticacion, crearCita);
  *         required: true
  *         schema:
  *           type: string
- *         description: Indica si el usuario es secretario
+ *         description: Indica si el usuario es secretario (true o false)
  *       - in: header
  *         name: ispaciente
  *         required: true
  *         schema:
  *           type: string
- *         description: Indica si el usuario tiene el rol de paciente
+ *         description: Indica si el usuario tiene el rol de paciente (true o false )
  *     responses:
  *       '200':
  *         description: Cita cancelada exitosamente
@@ -195,19 +195,19 @@ citaRouter.put("/actualizar/:id", verificarAutenticacion, editarCita);
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de secretario/a.
+ *         description: Indica si el usuario tiene el rol de secretario/a. (true o false)
  *       - name: isdoctor
  *         in: header
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de doctor/a.
+ *         description: Indica si el usuario tiene el rol de doctor/a. (true o false)
  *       - name: ispaciente
  *         in: header
  *         schema:
  *           type: string
  *         required: true
- *         description: Indica si el usuario tiene el rol de paciente.
+ *         description: Indica si el usuario tiene el rol de paciente. (true o false)
  *     responses:
  *       '200':
  *         description: Lista de todas las citas médicas
