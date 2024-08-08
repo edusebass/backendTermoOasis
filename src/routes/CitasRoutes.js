@@ -138,7 +138,7 @@ citaRouter.put("/cancelar/:id", verificarAutenticacion, cancelarCita);
  *         required: true
  *         schema:
  *           type: string
- *         description: Indica si el usuario es secretario
+ *         description: Indica si el usuario es secretario (true o false)
  *     requestBody:
  *       required: true
  *       content:

@@ -8,6 +8,7 @@ const crearCita = async (req, res) => {
   const { idPaciente, idDoctor, start, end, comentarios } = req.body;
 
   const isSecre = req.headers['issecre'] === 'true';
+  if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 
   // Verificar los permisos de acceso
   if (!isSecre) {
@@ -16,6 +17,18 @@ const crearCita = async (req, res) => {
 
   if (Object.values(req.body).includes("")) {
     return res.status(400).json({ msg: "Lo sentimos, debes llenar todos los campos" });
+  }
+
+  if (!idPaciente || !idDoctor || !start || !end || comentarios === undefined) {
+    return res.status(400).json({ msg: "Lo sentimos, debes poner todos los campos en el body", status: false });
+  }
+
+  if (comentarios.length > 50) {
+    return res.status(400).json({ msg: "El comentario no debe exceder los 30 caracteres", status: false });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(idPaciente) || !mongoose.Types.ObjectId.isValid(idDoctor)) {
+    return res.status(400).json({ msg: "El ID no es válido no pertenece a mongoDB", status: false });
   }
 
   try {
@@ -134,9 +147,11 @@ const crearCita = async (req, res) => {
 const editarCita = async (req, res) => {
   const { id } = req.params;
   const isSecre = req.headers['issecre'] === 'true';
+  console.log(id)
   
   try {
     const cita = await CitaModelo.findById(id);
+    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 
     if (!isSecre) {
       return res.status(403).json({ msg: "Acceso denegado", status: false });
@@ -148,6 +163,14 @@ const editarCita = async (req, res) => {
     }
 
     const { start: startISO, end: endISO, comentarios, isCancelado } = req.body;
+
+    if ( !startISO || !endISO || !isCancelado || comentarios === undefined) {
+      return res.status(400).json({ msg: "Lo sentimos, faltan campos", status: false });
+    }
+  
+    if (comentarios.length > 50) {
+      return res.status(400).json({ msg: "El comentario no debe exceder los 30 caracteres", status: false });
+    }
 
     let inicioInput = new Date(startISO);
     let finInput = new Date(endISO);
@@ -245,11 +268,11 @@ const editarCita = async (req, res) => {
       especialistemail: existDoctor.email,
       cita
     });
-
     res.status(200).json({ response: "Cita actualizada exitosamente", msg: citastored, status: true });
-  } catch (error) {
-    res.status(404).json({ msg: "El intento no es valido" });
-  }
+    } catch {
+      res.status(400).json({ msg: error.message, status: false });
+    }
+ 
 };
 
 
