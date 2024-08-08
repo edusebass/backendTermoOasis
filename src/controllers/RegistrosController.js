@@ -13,6 +13,9 @@ const crearRegistro = async (req, res) => {
   }
 
   try {
+
+    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
+
     // Verificar si los IDs son válidos
     if (!mongoose.Types.ObjectId.isValid(idPaciente) || !mongoose.Types.ObjectId.isValid(idDoctor) || !mongoose.Types.ObjectId.isValid(idCita)) {
       return res.status(400).json({ msg: "Uno o más IDs proporcionados no son válidos", status: false });
@@ -113,6 +116,7 @@ const obtenerRegistroPaciente = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ msg: "ID proporcionado no es válido para mongoDB", status: false });
   }
+  
 
   if (!isDoctor && !isSecre) {
     return res.status(403).json({ msg: "Acceso denegado", status: false });
@@ -144,6 +148,8 @@ const editarRegistro = async (req, res) => {
   }
 
   try {
+
+    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"})
 
     // Verificar si los IDs son válidos
     if (!mongoose.Types.ObjectId.isValid(id)) {
